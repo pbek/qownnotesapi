@@ -6,8 +6,8 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/04f33cd9-67b9-4a88-92d0-0c98944d1a8f/mini.png)](https://insight.sensiolabs.com/projects/04f33cd9-67b9-4a88-92d0-0c98944d1a8f)
 -->
 
-QOwnNotesAPI is the ownCloud API for [QOwnNotes](https://github.com/pbek/QOwnNotes/).
+QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org).
 
-It's main purpose is to provide access to your ownCloud application for your local QOwnNotes installation.  
+It's main purpose is to provide API access to your ownCloud application for your local QOwnNotes installation.  
 
 Place this app in your `owncloud/apps/` directory.

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<info>
+    <!-- metadata -->
+    <id>qownnotesapi</id>
+    <name>QOwnNotesAPI</name>
+    <description>QOwnNotesAPI is the ownCloud API for QOwnNotes</description>
+    <licence>AGPL</licence>
+    <author>Patrizio Bekerle</author>
+    <version>0.1</version>
+    <namespace>QOwnNotesAPI</namespace>
+    <category>tools</category>
+
+    <!-- documentation -->
+    <documentation>
+        <admin>https://github.com/pbek/qownnotesapi</admin>
+    </documentation>
+
+    <!-- resources -->
+    <website>https://github.com/pbek/qownnotesapi</website>
+    <bugs>https://github.com/pbek/qownnotesapi/issues</bugs>
+    <repository type="git">https://github.com/pbek/qownnotesapi.git</repository>
+
+    <!-- dependencies -->
+    <requiremin>8.1</requiremin>
+    <dependencies>
+        <owncloud min-version="8.1" />
+        <php min-version="5.4" />
+    </dependencies>
+</info>

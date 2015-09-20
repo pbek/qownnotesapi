@@ -1,0 +1,60 @@
+language: php
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7
+
+env:
+  global:
+    - BRANCH=master
+  matrix:
+    - DB=mysql
+
+matrix:
+  allow_failures:
+    - php: 7
+  include:
+    - php: 5.4
+      env: DB=sqlite
+    - php: 5.4
+      env: DB=pgsql
+
+
+install:
+  # install ocdev
+  - sudo apt-get update
+  - sudo apt-get -y install python3-jinja2 python3-setuptools
+  - sudo easy_install3 requests
+  - sudo easy_install3 ocdev
+  # set up postgresql
+  - createuser -U travis -s oc_autotest
+  # set up mysql
+  - mysql -e 'create database oc_autotest;'
+  - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"
+  - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"
+  # install owncloud
+  - cd ..
+  - ocdev setup core --dir owncloud --branch $BRANCH --no-history
+  - mv qownnotesapi owncloud/apps
+  - phpenv config-add owncloud/apps/qownnotesapi/tests/travis/php.ini
+  - cd owncloud
+  - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
+  - ./occ app:enable qownnotesapi
+  # update composer
+  - composer self-update
+before_script:
+  - cd apps/qownnotesapi
+  - composer require codeclimate/php-test-reporter --dev
+
+script:
+  - phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
+
+after_script:
+  # report to Code Climate via curl
+  # $CODECLIMATE_REPO_TOKEN has to be set as environment variable on travis
+  - ./vendor/bin/test-reporter --stdout > codeclimate.json
+  - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
+
+addons:
+    postgresql: "9.3"

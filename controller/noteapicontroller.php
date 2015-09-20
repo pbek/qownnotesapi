@@ -14,6 +14,7 @@ namespace OCA\QOwnNotesAPI\Controller;
 use \OCP\IRequest;
 use \OCP\AppFramework\ApiController;
 use \OCP\AppFramework\Http;
+use OCA\Files_Versions\Storage;
 
 class NoteApiController extends ApiController {
 
@@ -29,11 +30,17 @@ class NoteApiController extends ApiController {
      * @NoCSRFRequired
      * @CORS
      *
-     * @param string $fileName
      * @return array
      */
-    public function getAllVersions($fileName) {
-        return array("file_name" => $fileName);
+    public function getAllVersions() {
+        $source = (string) $_GET["file_name"];
+        list ($uid, $filename) = Storage::getUidAndFilename($source);
+        $versions = Storage::getVersions($uid, $filename, $source);
+
+        return array(
+            "file_name" => $source,
+            "versions" => $versions
+        );
     }
 
     /**

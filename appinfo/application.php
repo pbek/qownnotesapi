@@ -17,8 +17,8 @@ use OCA\QOwnNotesAPI\Capabilities;
 class Application extends App {
 	public function __construct(array $urlParams = array()) {
 		parent::__construct('qownnotesapi', $urlParams);
-		$container = $this->getContainer();
-		$server = $container->getServer();
+//		$container = $this->getContainer();
+//		$server = $container->getServer();
 
 		/*
 		 * Register capabilities

@@ -46,6 +46,9 @@ class NoteApiController extends ApiController {
             $users_view = new View('/'.$uid);
             $currentData = $users_view->file_get_contents('files/' . $filename);
 
+//            $previousData = $currentData;
+//            $versions = array_reverse( $versions, true );
+
             foreach ($versions as $versionData)
             {
                 // get timestamp of version
@@ -65,8 +68,13 @@ class NoteApiController extends ApiController {
                     "timestamp" => $mtime,
                     "humanReadableTimestamp" => $versionData["humanReadableTimestamp"],
                     "diffHtml" => $html,
+                    "data" => $data,
                 );
+
+//                $previousData = $data;
             }
+
+//            $versionsResults = array_reverse( $versionsResults );
         }
 
         return array(

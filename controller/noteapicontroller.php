@@ -11,6 +11,7 @@
 
 namespace OCA\QOwnNotesAPI\Controller;
 
+use OC\Files\View;
 use \OCP\IRequest;
 use \OCP\AppFramework\ApiController;
 use \OCP\AppFramework\Http;
@@ -36,10 +37,41 @@ class NoteApiController extends ApiController {
         $source = (string) $_GET["file_name"];
         list ($uid, $filename) = Storage::getUidAndFilename($source);
         $versions = Storage::getVersions($uid, $filename, $source);
+        $versionsResults = array();
+
+        if (is_array( $versions ) && (count($versions) > 0))
+        {
+            require_once __DIR__ . '/../3rdparty/finediff/finediff.php';
+
+            $users_view = new View('/'.$uid);
+            $currentData = $users_view->file_get_contents('files/' . $filename);
+
+            foreach ($versions as $versionData)
+            {
+                // get timestamp of version
+                $mtime = (int)$versionData["version"];
+
+                // get filename of note version
+                $versionFileName = 'files_versions/' . $filename . '.v' . $mtime;
+
+                // load the data from the file
+                $data = $users_view->file_get_contents($versionFileName);
+
+                // calculate diff between versions
+                $opcodes = \FineDiff::getDiffOpcodes($currentData, $data);
+                $html = \FineDiff::renderDiffToHTMLFromOpcodes($currentData, $opcodes);
+
+                $versionsResults[] = array(
+                    "timestamp" => $mtime,
+                    "humanReadableTimestamp" => $versionData["humanReadableTimestamp"],
+                    "diffHtml" => $html,
+                );
+            }
+        }
 
         return array(
             "file_name" => $source,
-            "versions" => $versions
+            "versions" => $versionsResults
         );
     }
 

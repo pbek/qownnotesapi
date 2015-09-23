@@ -21,10 +21,12 @@ use OCA\Files_Versions\Storage;
 
 class NoteApiController extends ApiController {
 
-    //use JSONHttpError;
+    var $username;
 
     public function __construct($AppName,
+                                \OC_User $user,
                                 IRequest $request) {
+        $this->username = $user->getUser();
         parent::__construct($AppName, $request);
     }
 
@@ -109,7 +111,6 @@ class NoteApiController extends ApiController {
      *
      * @NoAdminRequired
      * @NoCSRFRequired
-     * @CORS
      *
      * @return string
      */
@@ -117,13 +118,13 @@ class NoteApiController extends ApiController {
         $dir = isset($_GET['dir']) ? (string)$_GET['dir'] : '';
 
         // remove leading "/"
-        if ( substr( $dir, 0, 1 ) == "/" )
+        if ( substr( $dir, 0, 1 ) === "/" )
         {
             $dir = substr( $dir, 1 );
         }
 
         // remove trailing "/"
-        if ( substr( $dir, -1 ) == "/" )
+        if ( substr( $dir, -1 ) === "/" )
         {
             $dir = substr( $dir, 0, -1 );
         }
@@ -145,12 +146,12 @@ class NoteApiController extends ApiController {
         foreach($filesInfo as $fileInfo)
         {
             $isInDir = strpos($fileInfo["extraData"], $dir . "/") === 0;
-            $isTxtFile = substr($fileInfo["name"], -4) == ".txt";
+            $isTxtFile = substr($fileInfo["name"], -4) === ".txt";
 
             if ($isInDir && $isTxtFile)
             {
                 $timestamp = (int) ($fileInfo["mtime"] / 1000);
-                $fileName = '/'.\OC_User::getUser(). '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
+                $fileName = '/'.$this->username. '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
 
                 // it's not very good to call file_get_contents directly here
                 $data = file_get_contents( "data/$fileName" );

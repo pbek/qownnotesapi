@@ -109,14 +109,27 @@ class NoteApiController extends ApiController {
      *
      * @NoAdminRequired
      * @NoCSRFRequired
+     * @CORS
      *
      * @return string
      */
     public function getTrashedNotes() {
         $dir = isset($_GET['dir']) ? (string)$_GET['dir'] : '';
-        $sortAttribute = isset($_GET['sort']) ? (string)$_GET['sort'] : 'name';
-        $sortDirection = isset($_GET['sortdirection']) ? ($_GET['sortdirection'] === 'desc') : false;
-        $data = array();
+
+        // remove leading "/"
+        if ( substr( $dir, 0, 1 ) == "/" )
+        {
+            $dir = substr( $dir, 1 );
+        }
+
+        // remove trailing "/"
+        if ( substr( $dir, -1 ) == "/" )
+        {
+            $dir = substr( $dir, 0, -1 );
+        }
+
+        $sortAttribute = isset($_GET['sort']) ? (string)$_GET['sort'] : 'mtime';
+        $sortDirection = isset($_GET['sortdirection']) ? ($_GET['sortdirection'] === 'desc') : true;
         $filesInfo = array();
 
         // generate the file list
@@ -127,18 +140,33 @@ class NoteApiController extends ApiController {
 
         }
 
-        // only return notes in the $dir directory
+        // only return notes (with extension ".txt") in the $dir directory
         $resultFilesInfo = array();
         foreach($filesInfo as $fileInfo)
         {
-            if (strpos($fileInfo["extraData"] . "/", $dir) === 0)
+            $isInDir = strpos($fileInfo["extraData"], $dir . "/") === 0;
+            $isTxtFile = substr($fileInfo["name"], -4) == ".txt";
+
+            if ($isInDir && $isTxtFile)
             {
-                $resultFilesInfo[] = $fileInfo;
+                $timestamp = (int) ($fileInfo["mtime"] / 1000);
+                $fileName = '/'.\OC_User::getUser(). '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
+
+                // it's not very good to call file_get_contents directly here
+                $data = file_get_contents( "data/$fileName" );
+
+                $resultFilesInfo[] = [
+                    "noteName" => substr($fileInfo["name"], 0, -4),
+                    "timestamp" => $timestamp,
+                    "dateString" => $fileInfo["date"],
+                    "data" => $data,
+                ];
             }
         }
 
+        $data = array();
         $data['directory'] = $dir;
-        $data['files'] = $resultFilesInfo;
+        $data['notes'] = $resultFilesInfo;
 
         return $data;
     }

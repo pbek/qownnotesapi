@@ -12,6 +12,8 @@
 namespace OCA\QOwnNotesAPI\Controller;
 
 use OC\Files\View;
+use Exception;
+use OCA\Files_Trashbin\Helper;
 use \OCP\IRequest;
 use \OCP\AppFramework\ApiController;
 use \OCP\AppFramework\Http;
@@ -27,6 +29,8 @@ class NoteApiController extends ApiController {
     }
 
     /**
+     * Gets all versions of a note
+     *
      * @NoAdminRequired
      * @NoCSRFRequired
      * @CORS
@@ -84,6 +88,8 @@ class NoteApiController extends ApiController {
     }
 
     /**
+     * Returns information about the ownCloud server
+     *
      * @NoAdminRequired
      * @NoCSRFRequired
      * @CORS
@@ -96,5 +102,44 @@ class NoteApiController extends ApiController {
             "app_version" => \OC::$server->getConfig()->getAppValue('qownnotesapi', 'installed_version'),
             "server_version" => \OC::$server->getSystemConfig()->getValue('version'),
         ];
+    }
+
+    /**
+     * Gets information about trashed notes
+     *
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     *
+     * @return string
+     */
+    public function getTrashedNotes() {
+        $dir = isset($_GET['dir']) ? (string)$_GET['dir'] : '';
+        $sortAttribute = isset($_GET['sort']) ? (string)$_GET['sort'] : 'name';
+        $sortDirection = isset($_GET['sortdirection']) ? ($_GET['sortdirection'] === 'desc') : false;
+        $data = array();
+        $filesInfo = array();
+
+        // generate the file list
+        try {
+            $files = Helper::getTrashFiles("/", \OC::$server->getUserSession()->getUser()->getUID(), $sortAttribute, $sortDirection);
+            $filesInfo = Helper::formatFileInfos($files);
+        } catch (Exception $e) {
+
+        }
+
+        // only return notes in the $dir directory
+        $resultFilesInfo = array();
+        foreach($filesInfo as $fileInfo)
+        {
+            if (strpos($fileInfo["extraData"] . "/", $dir) === 0)
+            {
+                $resultFilesInfo[] = $fileInfo;
+            }
+        }
+
+        $data['directory'] = $dir;
+        $data['files'] = $resultFilesInfo;
+
+        return $data;
     }
 }

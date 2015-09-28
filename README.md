@@ -10,4 +10,4 @@ QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org).
 
 It's main purpose is to provide API access to your ownCloud application for your local QOwnNotes installation.  
 
-Place this app in your `owncloud/apps/` directory.
+Place this app in your `owncloud/apps/` directory and enable it on your ownCloud server.

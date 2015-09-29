@@ -2,6 +2,7 @@
 
 ## v0.3.1
 - added checks if core trash bin and versions apps are enabled for the user
+- app compliance changes
 
 ## v0.3
 - added trashed notes api

@@ -99,7 +99,13 @@ class NoteApiController extends ApiController {
      * @return string
      */
     public function getAppInfo() {
+        $appManager = \OC::$server->getAppManager();
+        $versionsAppEnabled = $appManager->isEnabledForUser('files_versions');
+        $trashAppEnabled = $appManager->isEnabledForUser('files_trashbin');
+
         return [
+            "versions_app" => $versionsAppEnabled,
+            "trash_app" => $trashAppEnabled,
             "versioning" => true,
             "app_version" => \OC::$server->getConfig()->getAppValue('qownnotesapi', 'installed_version'),
             "server_version" => \OC::$server->getSystemConfig()->getValue('version'),

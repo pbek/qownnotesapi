@@ -18,6 +18,7 @@ use \OCP\IRequest;
 use \OCP\AppFramework\ApiController;
 use \OCP\AppFramework\Http;
 use OCA\Files_Versions\Storage;
+use OCA\Files_Trashbin\Trashbin;
 
 class NoteApiController extends ApiController {
 
@@ -184,6 +185,33 @@ class NoteApiController extends ApiController {
         $data = array();
         $data['directory'] = $dir;
         $data['notes'] = $resultFilesInfo;
+
+        return $data;
+    }
+
+    /**
+     * Restores a trashed note
+     *
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * @CORS
+     *
+     * @return string
+     */
+    public function restoreTrashedNote() {
+        $filename = (string) $_GET["file_name"];
+        $timestamp = (int) $_GET["timestamp"];
+
+        $path = $filename . ".d$timestamp";
+        $pathParts = pathinfo( $path );
+        $path = $pathParts['basename'];
+
+        $restoreResult = Trashbin::restore($path, $filename, $timestamp);
+
+        $data = array();
+        $data['result'] = $restoreResult;
+        $data['path'] = $path;
+        $data['filename'] = $filename;
 
         return $data;
     }

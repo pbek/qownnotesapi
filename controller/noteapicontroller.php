@@ -21,12 +21,12 @@ use OCA\Files_Versions\Storage;
 
 class NoteApiController extends ApiController {
 
-    var $username;
+    var $user;
 
     public function __construct($AppName,
                                 \OC_User $user,
                                 IRequest $request) {
-        $this->username = $user->getUser();
+        $this->user = $user->getUser();
         parent::__construct($AppName, $request);
     }
 
@@ -117,6 +117,7 @@ class NoteApiController extends ApiController {
      *
      * @NoAdminRequired
      * @NoCSRFRequired
+     * @CORS
      *
      * @return string
      */
@@ -141,7 +142,7 @@ class NoteApiController extends ApiController {
 
         // generate the file list
         try {
-            $files = Helper::getTrashFiles("/", \OC::$server->getUserSession()->getUser()->getUID(), $sortAttribute, $sortDirection);
+            $files = Helper::getTrashFiles("/", $this->user, $sortAttribute, $sortDirection);
             $filesInfo = Helper::formatFileInfos($files);
         } catch (Exception $e) {
 
@@ -157,10 +158,19 @@ class NoteApiController extends ApiController {
             if ($isInDir && $isTxtFile)
             {
                 $timestamp = (int) ($fileInfo["mtime"] / 1000);
-                $fileName = '/'.$this->username. '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
+                $fileName = '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
 
-                // it's not very good to call file_get_contents directly here
-                $data = file_get_contents( "data/$fileName" );
+                $view = new \OC\Files\View('/' . $this->user);
+                $data = "";
+
+                // load the file data
+                $handle = $view->fopen($fileName, 'rb');
+                if ($handle) {
+                    $chunkSize = 8192; // 8 kB chunks
+                    while (!feof($handle)) {
+                        $data .= fread($handle, $chunkSize);
+                    }
+                }
 
                 $resultFilesInfo[] = [
                     "noteName" => substr($fileInfo["name"], 0, -4),

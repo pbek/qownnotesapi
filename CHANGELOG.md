@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## v0.3.2
+- fixed a bug in the trashed notes api when the storage path is not in the ownCloud server path
+
 ## v0.3.1
 - added checks if core trash bin and versions apps are enabled for the user
 - app compliance changes

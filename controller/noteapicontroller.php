@@ -11,6 +11,7 @@
 
 namespace OCA\QOwnNotesAPI\Controller;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
 use OC\Files\View;
 use Exception;
 use OCA\Files_Trashbin\Helper;
@@ -192,6 +193,9 @@ class NoteApiController extends ApiController {
     /**
      * Restores a trashed note
      *
+     * We try to mimic undelete.php to get all versions restored too.
+     * @see owncloud/core/apps/files_trashbin/ajax/undelete.php
+     *
      * @NoAdminRequired
      * @NoCSRFRequired
      * @CORS
@@ -204,7 +208,10 @@ class NoteApiController extends ApiController {
 
         $path = $filename . ".d$timestamp";
         $pathParts = pathinfo( $path );
-        $path = $pathParts['basename'];
+        $path = "//" . $pathParts['basename'];
+
+        $pathParts = pathinfo( $filename );
+        $filename = $pathParts['basename'];
 
         $restoreResult = Trashbin::restore($path, $filename, $timestamp);
 

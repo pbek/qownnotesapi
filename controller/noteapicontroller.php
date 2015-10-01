@@ -11,7 +11,6 @@
 
 namespace OCA\QOwnNotesAPI\Controller;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
 use OC\Files\View;
 use Exception;
 use OCA\Files_Trashbin\Helper;
@@ -26,9 +25,8 @@ class NoteApiController extends ApiController {
     var $user;
 
     public function __construct($AppName,
-                                \OC_User $user,
                                 IRequest $request) {
-        $this->user = $user->getUser();
+        $this->user = \OC_User::getUser();
         parent::__construct($AppName, $request);
     }
 

@@ -58,3 +58,7 @@ after_script:
 
 addons:
     postgresql: "9.3"
+
+notifications:
+  email:
+    - $NOTIFICATION_EMAIL

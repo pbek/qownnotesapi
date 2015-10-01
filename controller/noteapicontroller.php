@@ -152,7 +152,7 @@ class NoteApiController extends ApiController {
         $resultFilesInfo = array();
         foreach($filesInfo as $fileInfo)
         {
-            $isInDir = strpos($fileInfo["extraData"], $dir . "/") === 0;
+            $isInDir = strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0;
             $isTxtFile = substr($fileInfo["name"], -4) === ".txt";
 
             if ($isInDir && $isTxtFile)

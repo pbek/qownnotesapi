@@ -20,14 +20,14 @@ class NoteApiControllerTest extends PHPUnit_Framework_TestCase {
 	private $controller;
 
 	public function setUp() {
-		$request = $this->getMockBuilder('OCP\IRequest')
-			->disableOriginalConstructor()
-			->getMock();
+//		$request = $this->getMockBuilder('OCP\IRequest')
+//			->disableOriginalConstructor()
+//			->getMock();
 //		$user = $this->getMockBuilder('\OC\User\User')
 //			->disableOriginalConstructor()
 //			->getMock();
-
-		$this->controller = new NoteApiController( 'qownnotesapi', $request );
+//
+//		$this->controller = new NoteApiController( 'qownnotesapi', $user, $request );
 	}
 
 	public function testGetAllVersions() {

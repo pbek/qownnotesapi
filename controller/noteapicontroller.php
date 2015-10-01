@@ -25,8 +25,9 @@ class NoteApiController extends ApiController {
     var $user;
 
     public function __construct($AppName,
+                                \OC_User $user,
                                 IRequest $request) {
-        $this->user = \OC_User::getUser();
+        $this->user = $user->getUser();
         parent::__construct($AppName, $request);
     }
 

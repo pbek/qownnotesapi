@@ -1,7 +1,7 @@
 # QOwnNotesAPI Change Log
 
 ## v0.4
-- added api to restore trashed notes on server
+- added api to restore trashed notes on the server
 - fixed a bug in the trashed notes api were also notes from children folders of the notes folder would be viewed 
 
 ## v0.3.2

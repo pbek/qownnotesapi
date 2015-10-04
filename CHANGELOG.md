@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## v0.4.1
+- added check if notes path exists to app info api 
+
 ## v0.4
 - added api to restore trashed notes on the server
 - fixed a bug in the trashed notes api were also notes from children folders of the notes folder would be viewed 

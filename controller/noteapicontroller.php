@@ -103,6 +103,15 @@ class NoteApiController extends ApiController {
         $appManager = \OC::$server->getAppManager();
         $versionsAppEnabled = $appManager->isEnabledForUser('files_versions');
         $trashAppEnabled = $appManager->isEnabledForUser('files_trashbin');
+        $notesPathExists = false;
+
+        // check if notes path exists
+        if (isset($_GET['notes_path']) && ($_GET['notes_path'] != ""))
+        {
+            $notesPath = "/files" . (string)$_GET['notes_path'];
+            $view = new \OC\Files\View('/' . $this->user);
+            $notesPathExists = $view->is_dir($notesPath);
+        }
 
         return [
             "versions_app" => $versionsAppEnabled,
@@ -110,6 +119,7 @@ class NoteApiController extends ApiController {
             "versioning" => true,
             "app_version" => \OC::$server->getConfig()->getAppValue('qownnotesapi', 'installed_version'),
             "server_version" => \OC::$server->getSystemConfig()->getValue('version'),
+            "notes_path_exists" => $notesPathExists,
         ];
     }
 

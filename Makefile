@@ -9,6 +9,9 @@ package_name=$(app_name)
 
 all: dist
 
+clean_backup:
+	find $(project_dir) -name "*.backup.[0-9]*" -type f -delete
+
 clean:
 	rm -rf $(build_dir)
 
@@ -37,4 +40,5 @@ appstore_package: clean
 	--exclude=$(project_dir)/.travis.yml \
 	--exclude=$(project_dir)/phpunit*xml \
 	--exclude=$(project_dir)/Makefile \
-	--exclude=$(project_dir)/tests
+	--exclude=$(project_dir)/tests \
+	--exclude=$(project_dir)/*.backup.[0-9]*

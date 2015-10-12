@@ -16,4 +16,8 @@ QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org), the 
 
 The only purpose of this App is to provide API access to your ownCloud server for your QOwnNotes desktop installation, you cannot use this ownCloud App for anything else, if you don't have QOwnNotes installed on your desktop computer! 
 
-[Download](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) the app package into your ownCLoud app folder (`owncloud/apps/`) and unpack it there with "tar xvfz 173817-qownnotesapi.tar.gz".
+[Download](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) the app package into your ownCloud app folder (`owncloud/apps/`) and unpack it there with:
+
+```bash
+tar xvfz 173817-qownnotesapi.tar.gz
+```

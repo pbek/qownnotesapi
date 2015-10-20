@@ -53,8 +53,8 @@ script:
 after_script:
   # report to Code Climate via curl
   # $CODECLIMATE_REPO_TOKEN has to be set as environment variable on travis
-  #- ./vendor/bin/test-reporter --stdout > codeclimate.json
-  #- "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
+  - ./vendor/bin/test-reporter --stdout > codeclimate.json
+  - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
 
 addons:
     postgresql: "9.3"

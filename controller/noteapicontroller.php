@@ -24,10 +24,15 @@ class NoteApiController extends ApiController {
 
     var $user;
 
+    /**
+     * @param string $AppName
+     * @param string $userId
+     * @param IRequest $request
+     */
     public function __construct($AppName,
-                                \OC_User $user,
+                                $userId,
                                 IRequest $request) {
-        $this->user = $user->getUser();
+        $this->user = $userId;
         parent::__construct($AppName, $request);
     }
 
@@ -41,7 +46,7 @@ class NoteApiController extends ApiController {
      * @return array
      */
     public function getAllVersions() {
-        $source = (string) $_GET["file_name"];
+        $source = $this->request->getParam( "file_name", "" );
         list ($uid, $filename) = Storage::getUidAndFilename($source);
         $versions = Storage::getVersions($uid, $filename, $source);
         $versionsResults = array();
@@ -104,11 +109,12 @@ class NoteApiController extends ApiController {
         $versionsAppEnabled = $appManager->isEnabledForUser('files_versions');
         $trashAppEnabled = $appManager->isEnabledForUser('files_trashbin');
         $notesPathExists = false;
+        $notesPath = $this->request->getParam( "notes_path", "" );
 
         // check if notes path exists
-        if (isset($_GET['notes_path']) && ($_GET['notes_path'] != ""))
+        if ($notesPath != "")
         {
-            $notesPath = "/files" . (string)$_GET['notes_path'];
+            $notesPath = "/files" . (string)$notesPath;
             $view = new \OC\Files\View('/' . $this->user);
             $notesPathExists = $view->is_dir($notesPath);
         }
@@ -133,7 +139,7 @@ class NoteApiController extends ApiController {
      * @return string
      */
     public function getTrashedNotes() {
-        $dir = isset($_GET['dir']) ? (string)$_GET['dir'] : '';
+        $dir = $this->request->getParam( "dir", "" );
 
         // remove leading "/"
         if ( substr( $dir, 0, 1 ) === "/" )
@@ -147,8 +153,9 @@ class NoteApiController extends ApiController {
             $dir = substr( $dir, 0, -1 );
         }
 
-        $sortAttribute = isset($_GET['sort']) ? (string)$_GET['sort'] : 'mtime';
-        $sortDirection = isset($_GET['sortdirection']) ? ($_GET['sortdirection'] === 'desc') : true;
+        $sortAttribute = $this->request->getParam( "sort", "mtime" );
+        $sortDirectionParam = $this->request->getParam( "sortdirection", "" );
+        $sortDirection = ( $sortDirectionParam != "" ) ? ($sortDirectionParam === 'desc') : true;
         $filesInfo = array();
 
         // generate the file list
@@ -212,8 +219,8 @@ class NoteApiController extends ApiController {
      * @return string
      */
     public function restoreTrashedNote() {
-        $filename = (string) $_GET["file_name"];
-        $timestamp = (int) $_GET["timestamp"];
+        $filename = $this->request->getParam( "file_name" );
+        $timestamp = (int) $this->request->getParam( "timestamp" );
 
         $path = $filename . ".d$timestamp";
         $pathParts = pathinfo( $path );

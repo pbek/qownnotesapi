@@ -8,9 +8,7 @@
 [![Build Status](https://travis-ci.org/pbek/qownnotesapi.svg?branch=develop)](https://travis-ci.org/pbek/qownnotesapi)
 [![Code Climate](https://codeclimate.com/github/pbek/qownnotesapi/badges/gpa.svg)](https://codeclimate.com/github/pbek/qownnotesapi)
 [![Test Coverage](https://codeclimate.com/github/pbek/qownnotesapi/badges/coverage.svg)](https://codeclimate.com/github/pbek/qownnotesapi/coverage)
-<!--
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/04f33cd9-67b9-4a88-92d0-0c98944d1a8f/mini.png)](https://insight.sensiolabs.com/projects/04f33cd9-67b9-4a88-92d0-0c98944d1a8f)
--->
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/967e5280-358c-48f2-9841-e94a447066f8/mini.png)](https://insight.sensiolabs.com/projects/967e5280-358c-48f2-9841-e94a447066f8)
 
 QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org), the open source (GPL) notepad for Linux, Mac OS X and Windows, that works together with the notes application of ownCloud.
 

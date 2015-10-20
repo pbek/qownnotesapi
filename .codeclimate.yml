@@ -3,3 +3,5 @@ languages:
   JavaScript: true
   PHP: true
   Python: false
+exclude_paths:
+- "3rdparty"

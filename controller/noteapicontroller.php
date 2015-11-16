@@ -112,7 +112,7 @@ class NoteApiController extends ApiController {
         $notesPath = $this->request->getParam( "notes_path", "" );
 
         // check if notes path exists
-        if ($notesPath != "")
+        if ($notesPath !== "")
         {
             $notesPath = "/files" . (string)$notesPath;
             $view = new \OC\Files\View('/' . $this->user);
@@ -155,7 +155,7 @@ class NoteApiController extends ApiController {
 
         $sortAttribute = $this->request->getParam( "sort", "mtime" );
         $sortDirectionParam = $this->request->getParam( "sortdirection", "" );
-        $sortDirection = ( $sortDirectionParam != "" ) ? ($sortDirectionParam === 'desc') : true;
+        $sortDirection = ( $sortDirectionParam !== "" ) ? ( $sortDirectionParam === 'desc' ) : true;
         $filesInfo = array();
 
         // generate the file list

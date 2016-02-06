@@ -170,10 +170,12 @@ class NoteApiController extends ApiController {
         $resultFilesInfo = array();
         foreach($filesInfo as $fileInfo)
         {
-            $isInDir = strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0;
-            $isTxtFile = substr($fileInfo["name"], -4) === ".txt";
+            $pathParts = pathinfo($fileInfo["name"]);
 
-            if ($isInDir && $isTxtFile)
+            $isInDir = strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0;
+            $isNoteFile = in_array($pathParts["extension"], array( "md", "txt" ));
+
+            if ($isInDir && $isNoteFile)
             {
                 $timestamp = (int) ($fileInfo["mtime"] / 1000);
                 $fileName = '/files_trashbin/files/' . $fileInfo["name"] . ".d$timestamp";
@@ -191,7 +193,8 @@ class NoteApiController extends ApiController {
                 }
 
                 $resultFilesInfo[] = [
-                    "noteName" => substr($fileInfo["name"], 0, -4),
+                    "noteName" => $pathParts["filename"],
+                    "fileName" => $fileInfo["name"],
                     "timestamp" => $timestamp,
                     "dateString" => $fileInfo["date"],
                     "data" => $data,

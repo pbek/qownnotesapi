@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## v0.4.2
+- added markdown (`.md`) file support to the trash restoration
+
 ## v0.4.1
 - added check if notes path exists to app info api 
 

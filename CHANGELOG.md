@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## v0.4.3
+- fixed a warning on the app page in ownCloud 9.0
+
 ## v0.4.2
 - added markdown (`.md`) file support to the trash restoration
 

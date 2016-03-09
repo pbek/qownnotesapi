@@ -6,7 +6,7 @@
     <description>QOwnNotesAPI is the ownCloud API for QOwnNotes, the open source (GPL) notepad for Linux, Mac OS X and Windows, that works together with the notes application of ownCloud.</description>
     <licence>AGPL</licence>
     <author>Patrizio Bekerle</author>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <namespace>QOwnNotesAPI</namespace>
     <ocsid>173817</ocsid>
     <category>tools</category>
@@ -24,7 +24,7 @@
     <!-- dependencies -->
     <requiremin>8.1</requiremin>
     <dependencies>
-        <owncloud min-version="8.1" />
+        <owncloud min-version="8.1" max-version="9.0" />
         <php min-version="5.4" />
     </dependencies>
 </info>

@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## v0.4.4
+- added support for custom note file extensions
+
 ## v0.4.3
 - fixed a warning on the app page in ownCloud 9.0
 

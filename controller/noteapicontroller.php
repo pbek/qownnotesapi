@@ -140,6 +140,13 @@ class NoteApiController extends ApiController {
      */
     public function getTrashedNotes() {
         $dir = $this->request->getParam( "dir", "" );
+        $customFileExtensions = $this->request->getParam( "extensions" );
+
+        if (!is_array($customFileExtensions)) {
+            $customFileExtensions = array();
+        }
+
+        $noteFileExtensions = array_merge( array("md", "txt"), $customFileExtensions);
 
         // remove leading "/"
         if ( substr( $dir, 0, 1 ) === "/" )
@@ -166,14 +173,14 @@ class NoteApiController extends ApiController {
 
         }
 
-        // only return notes (with extension ".txt") in the $dir directory
+        // only return notes (with extension ".txt", ".md" and the custom extensions) in the $dir directory
         $resultFilesInfo = array();
         foreach($filesInfo as $fileInfo)
         {
             $pathParts = pathinfo($fileInfo["name"]);
 
             $isInDir = strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0;
-            $isNoteFile = in_array($pathParts["extension"], array( "md", "txt" ));
+            $isNoteFile = in_array($pathParts["extension"], $noteFileExtensions);
 
             if ($isInDir && $isNoteFile)
             {

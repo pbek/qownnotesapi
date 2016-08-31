@@ -78,6 +78,10 @@ class NoteApiControllerTest extends TestCase {
 			->method( "getParam" )
 			->with( "sort", "mtime" )
 			->willReturn( "mtime" );
+		$this->request->expects( $this->at(2) )
+			->method( "getParam" )
+			->with( "extensions", "" )
+			->willReturn( array() );
 
 		$result = $this->controller->getTrashedNotes();
 

@@ -4,9 +4,12 @@ php:
   - 5.5
   - 5.6
   - 7
+  - hhvm
 
 env:
   global:
+    - CORE_BRANCH=master
+    - APP_NAME=qownnotesapi
     - BRANCH=master
   matrix:
     - DB=mysql
@@ -14,37 +17,29 @@ env:
 matrix:
   allow_failures:
     - php: 7
+    - php: hhvm
   include:
     - php: 5.4
       env: DB=sqlite
     - php: 5.4
       env: DB=pgsql
+    - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable8.1"
+    - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable8.2"
+  fast_finish: true
 
-
-install:
-  # install ocdev
+before_install:
   - sudo apt-get update
   - sudo apt-get -y install python3-jinja2 python3-setuptools
-  - sudo easy_install3 requests
-  - sudo easy_install3 ocdev
-  # set up postgresql
-  - createuser -U travis -s oc_autotest
-  # set up mysql
-  - mysql -e 'create database oc_autotest;'
-  - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"
-  - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"
-  # install owncloud
-  - cd ..
-  - ocdev setup core --dir owncloud --branch $BRANCH --no-history
-  - mv qownnotesapi owncloud/apps
-  - phpenv config-add owncloud/apps/qownnotesapi/tests/travis/php.ini
-  - cd owncloud
-  - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
-  - ./occ app:enable qownnotesapi
-  # update composer
-  - composer self-update
+  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+  - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+  - cd ../core
+  - php occ app:enable $APP_NAME
+
 before_script:
-  - cd apps/qownnotesapi
+  - cd apps/$APP_NAME
+  #- composer self-update
   - composer require codeclimate/php-test-reporter --dev
 
 script:

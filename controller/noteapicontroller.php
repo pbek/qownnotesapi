@@ -140,7 +140,7 @@ class NoteApiController extends ApiController {
      */
     public function getTrashedNotes() {
         $dir = $this->request->getParam( "dir", "" );
-        $customFileExtensions = $this->request->getParam( "extensions" );
+        $customFileExtensions = $this->request->getParam( "extensions", array() );
 
         if (!is_array($customFileExtensions)) {
             $customFileExtensions = array();

@@ -16,16 +16,17 @@ env:
 
 matrix:
   allow_failures:
+    - php: 5.4
     - php: 7
     - php: hhvm
   include:
-    - php: 5.4
+    - php: 5.5
       env: DB=sqlite
-    - php: 5.4
+    - php: 5.5
       env: DB=pgsql
-    - php: 5.4
+    - php: 5.5
       env: "DB=mysql CORE_BRANCH=stable8.1"
-    - php: 5.4
+    - php: 5.5
       env: "DB=mysql CORE_BRANCH=stable8.2"
   fast_finish: true
 

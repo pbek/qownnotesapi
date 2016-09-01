@@ -70,15 +70,15 @@ class NoteApiControllerTest extends TestCase {
 	}
 
 	public function testGetTrashedNotes() {
-		$this->request->expects( $this->at(0) )
+		$this->request->expects( $this->any() )
 			->method( "getParam" )
 			->with( "dir", "" )
 			->willReturn( "/Notes" );
-		$this->request->expects( $this->at(1) )
+		$this->request->expects( $this->any() )
 			->method( "getParam" )
 			->with( "sort", "mtime" )
 			->willReturn( "mtime" );
-		$this->request->expects( $this->at(2) )
+		$this->request->expects( $this->any() )
 			->method( "getParam" )
 			->with( "extensions", array() )
 			->willReturn( array() );

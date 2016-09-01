@@ -179,7 +179,9 @@ class NoteApiController extends ApiController {
         {
             $pathParts = pathinfo($fileInfo["name"]);
 
-            $isInDir = strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0;
+            // if $fileInfo["extraData"] is not set we will have to show the note files from all folders in QOwnNotes
+            $isInDir = isset($fileInfo["extraData"]) ?
+                (strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0) : true;
             $isNoteFile = in_array($pathParts["extension"], $noteFileExtensions);
 
             if ($isInDir && $isNoteFile)

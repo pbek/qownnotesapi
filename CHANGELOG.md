@@ -3,7 +3,7 @@
 ## 16.09.0
 - fixed a problem when the ownCloud or Nextcloud server didn't provide the path
   of a trashed note and thus no note was shown in the trash dialog of QOwnNotes
-- increased `max-version` to `10.2`
+- increased `max-version` to `9.2`
 - switched to rolling release version numbers
 
 ## 0.4.4

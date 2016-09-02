@@ -23,7 +23,7 @@
 
     <!-- dependencies -->
     <dependencies>
-        <owncloud min-version="8.1" max-version="10.2" />
+        <owncloud min-version="8.1" max-version="9.2" />
         <php min-version="5.4" />
     </dependencies>
 </info>

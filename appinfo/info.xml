@@ -3,7 +3,7 @@
     <!-- metadata -->
     <id>qownnotesapi</id>
     <name>QOwnNotesAPI</name>
-    <description>QOwnNotesAPI is the ownCloud API for QOwnNotes, the open source (GPL) notepad for Linux, Mac OS X and Windows, that works together with the notes application of ownCloud.</description>
+    <description>ownCloud/NextCloud API for QOwnNotes, the open source (GPL) notepad for Linux, Mac OS X and Windows</description>
     <licence>AGPL</licence>
     <author>Patrizio Bekerle</author>
     <version>16.09.0</version>

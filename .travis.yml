@@ -74,7 +74,7 @@ before_script:
   - composer require codeclimate/php-test-reporter --dev
 
 script:
-  - make test
+#  - make test
   - phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
 
 after_script:

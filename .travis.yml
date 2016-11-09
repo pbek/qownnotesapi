@@ -13,7 +13,6 @@ env:
     - CORE_BRANCH=stable10
     - APP_NAME=qownnotesapi
   matrix:
-#    - DB=mysql
     - DB=pgsql
 
 matrix:
@@ -22,6 +21,7 @@ matrix:
     - php: 7
     - php: hhvm
     - env: DB=pgsql CORE_BRANCH=master
+    - env: DB=mysql
   include:
     - php: 5.5
       env: DB=sqlite

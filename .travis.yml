@@ -13,7 +13,8 @@ env:
     - CORE_BRANCH=stable10
     - APP_NAME=qownnotesapi
   matrix:
-    - DB=mysql
+#    - DB=mysql
+    - DB=pgsql
 
 matrix:
   allow_failures:
@@ -60,7 +61,7 @@ before_script:
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e 'create database oc_autotest;'; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"; fi
-  # fill nextcloud with default configs and enable news
+  # fill nextcloud with default configs and enable app
   - cd nextcloud
   - mkdir data
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''

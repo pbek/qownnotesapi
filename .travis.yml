@@ -23,14 +23,12 @@ matrix:
     - php: hhvm
     - env: DB=pgsql CORE_BRANCH=master
   include:
-    - php: 5.6
-      env: DB=pgsql CORE_BRANCH=master
-    - php: 5.6
-      env: DB=mysql CORE_BRANCH=master
     - php: 5.5
       env: DB=sqlite
     - php: 5.5
       env: DB=pgsql
+    - php: 5.6
+      env: DB=pgsql CORE_BRANCH=master
   fast_finish: true
 
 before_install:
@@ -43,7 +41,7 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   # re-enable once mariadb is added as an option
-  - if [[ "$DB" == 'mysql' ]]; then sudo apt-get -y install mariadb-server; fi
+#  - if [[ "$DB" == 'mysql' ]]; then sudo apt-get -y install mariadb-server; fi
   - nvm install 6
   - npm install -g npm@latest
   - make
@@ -83,7 +81,6 @@ after_failure:
   - cat ../../data/nextcloud.log
 
 addons:
-#  postgresql: "9.3"
   firefox: "latest"
 
 notifications:

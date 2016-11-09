@@ -28,6 +28,10 @@ matrix:
     - php: 5.5
       env: DB=pgsql
     - php: 5.6
+      env: DB=sqlite
+    - php: 5.6
+      env: DB=mysql
+    - php: 5.6
       env: DB=pgsql CORE_BRANCH=master
   fast_finish: true
 

@@ -17,13 +17,13 @@ The only purpose of this App is to provide API access to your ownCloud server fo
 
 ## Installation
 
-Clone the App into your Nextcloud / ownCloud apps directory:
+Clone the app into your Nextcloud / ownCloud apps directory:
 
 ```bash
 git clone https://github.com/pbek/qownnotesapi.git
 ```
 
-Activate the App:
+Activate the app:
 
 ```bash
 occ app:enable qownnotesapi

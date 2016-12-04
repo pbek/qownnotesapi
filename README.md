@@ -2,8 +2,9 @@
 
 [Changelog](https://github.com/pbek/qownnotesapi/blob/develop/CHANGELOG.md) | 
 [Issues](https://github.com/pbek/qownnotesapi/issues) | 
-[Download](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) |
-[ownCloud Apps page](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817)
+[Download](https://github.com/pbek/qownnotesapi/releases) |
+[ownCloud Apps page](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) |
+[Nextcloud Apps page](https://apps.nextcloud.com/apps/qownnotesapi)
 
 [![Build Status](https://travis-ci.org/pbek/qownnotesapi.svg?branch=develop)](https://travis-ci.org/pbek/qownnotesapi)
 [![Code Climate](https://codeclimate.com/github/pbek/qownnotesapi/badges/gpa.svg)](https://codeclimate.com/github/pbek/qownnotesapi)
@@ -14,11 +15,20 @@ QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org), the 
 
 The only purpose of this App is to provide API access to your ownCloud server for your QOwnNotes desktop installation, you cannot use this ownCloud App for anything else, if you don't have QOwnNotes installed on your desktop computer! 
 
-[Download](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) the app package into your ownCloud app folder (`owncloud/apps/`) and unpack it there with:
+## Installation
+
+Clone the App into your Nextcloud / ownCloud apps directory:
 
 ```bash
-tar xvfz 173817-qownnotesapi.tar.gz
+git clone https://github.com/pbek/qownnotesapi.git
 ```
+
+Activate the App:
+
+```bash
+occ app:enable qownnotesapi
+```
+
 ## Screenshot
 ![Screenhot](screenshot.png)
 

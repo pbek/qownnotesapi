@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 16.12.0
+- changes to make it ready for the Nextcloud app store
+
 ## 16.09.0
 - fixed a problem when the ownCloud or Nextcloud server didn't provide the path
   of a trashed note and thus no note was shown in the trash dialog of QOwnNotes

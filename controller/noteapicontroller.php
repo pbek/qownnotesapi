@@ -178,11 +178,12 @@ class NoteApiController extends ApiController {
         foreach($filesInfo as $fileInfo)
         {
             $pathParts = pathinfo($fileInfo["name"]);
+            $extension = isset($pathParts["extension"]) ? $pathParts["extension"] : "";
 
             // if $fileInfo["extraData"] is not set we will have to show the note files from all folders in QOwnNotes
             $isInDir = isset($fileInfo["extraData"]) ?
                 (strpos($fileInfo["extraData"], $dir . "/" . $fileInfo["name"]) === 0) : true;
-            $isNoteFile = in_array($pathParts["extension"], $noteFileExtensions);
+            $isNoteFile = in_array($extension, $noteFileExtensions);
 
             if ($isInDir && $isNoteFile)
             {
@@ -201,11 +202,13 @@ class NoteApiController extends ApiController {
                     }
                 }
 
+                $dateString = isset($fileInfo["date"]) ? $fileInfo["date"] : date("Y-m-d H:i:s", $timestamp);
+
                 $resultFilesInfo[] = [
                     "noteName" => $pathParts["filename"],
                     "fileName" => $fileInfo["name"],
                     "timestamp" => $timestamp,
-                    "dateString" => $fileInfo["date"],
+                    "dateString" => $dateString,
                     "data" => $data,
                 ];
             }

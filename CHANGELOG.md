@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 17.5.0
+- enabled and tested app for ownCloud 10 and Nextcloud 12
+
 ## 17.3.0
 - fixed the time-output of the trashed notes api
 - fixed some PHP warnings in the log

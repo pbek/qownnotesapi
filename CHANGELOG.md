@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 17.7.0
+- changes to get the app into the ownCloud Marketplace
+
 ## 17.5.0
 - enabled and tested app for ownCloud 10 and Nextcloud 12
 

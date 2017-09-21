@@ -21,16 +21,9 @@ use OCP\Capabilities\ICapability;
 class Capabilities implements ICapability {
 
 	/**
-	 * @return \OC_OCS_Result
+	 * @return array
 	 */
 	public static function getCapabilities() {
-//		return new \OC_OCS_Result(array(
-//			'capabilities' => array(
-//				'qownnotes' => array(
-//					'versioning' => true,
-//					),
-//				),
-//			));
 		return array(
 			'qownnotes' => array(
 				'versioning' => true,

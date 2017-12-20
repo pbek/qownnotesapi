@@ -12,6 +12,9 @@ The only purpose of this App is to provide API access to your ownCloud/Nextcloud
     <version>17.7.0</version>
     <namespace>QOwnNotesAPI</namespace>
     <ocsid>173817</ocsid>
+	<category>integration</category>
+	<category>office</category>
+    <category>productivity</category>
     <category>tools</category>
     <screenshot>https://raw.githubusercontent.com/pbek/qownnotesapi/develop/screenshot.png</screenshot>
 

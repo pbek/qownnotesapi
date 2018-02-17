@@ -3,7 +3,7 @@
 [Changelog](https://github.com/pbek/qownnotesapi/blob/develop/CHANGELOG.md) | 
 [Issues](https://github.com/pbek/qownnotesapi/issues) | 
 [Download](https://github.com/pbek/qownnotesapi/releases) |
-[ownCloud Apps page](https://apps.owncloud.com/content/show.php/QOwnNotesAPI?content=173817) |
+[ownCloud Apps page](https://marketplace.owncloud.com/apps/qownnotesapi) |
 [Nextcloud Apps page](https://apps.nextcloud.com/apps/qownnotesapi)
 
 [![Build Status](https://travis-ci.org/pbek/qownnotesapi.svg?branch=develop)](https://travis-ci.org/pbek/qownnotesapi)

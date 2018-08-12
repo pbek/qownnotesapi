@@ -2,15 +2,14 @@ sudo: false
 dist: trusty
 language: php
 php:
-  - 5.4
-  - 5.5
   - 5.6
-  - 7
+  - 7.1
+  - 7.2
   - hhvm
 
 env:
   global:
-    - CORE_BRANCH=stable10
+    - CORE_BRANCH=stable13
     - APP_NAME=qownnotesapi
   matrix:
     - DB=pgsql
@@ -18,19 +17,26 @@ env:
 matrix:
   allow_failures:
     - php: 5.4
-    - php: 7
+    - php: 7.1
+    - php: 7.2
     - php: hhvm
     - env: DB=pgsql CORE_BRANCH=master
     - env: DB=mysql
   include:
-    - php: 5.5
-      env: DB=sqlite
-    - php: 5.5
-      env: DB=pgsql
     - php: 5.6
       env: DB=sqlite
     - php: 5.6
       env: DB=mysql
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=stable10
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=stable11
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=stable12
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=v14.0.0beta3
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=master
     - php: 7
       env: DB=pgsql CORE_BRANCH=master
   fast_finish: true

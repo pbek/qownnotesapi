@@ -9,7 +9,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=stable15
+    - CORE_BRANCH=stable13
     - APP_NAME=qownnotesapi
   matrix:
     - DB=pgsql

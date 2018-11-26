@@ -39,10 +39,10 @@ matrix:
       env: DB=mysql CORE_BRANCH=stable14
     - php: 7.2
       env: DB=mysql CORE_BRANCH=stable15
-    - php: 7.2
-      env: DB=mysql CORE_BRANCH=master
-    - php: 7.2
-      env: DB=pgsql CORE_BRANCH=master
+#    - php: 7.2
+#      env: DB=mysql CORE_BRANCH=master
+#    - php: 7.2
+#      env: DB=pgsql CORE_BRANCH=master
   fast_finish: true
 
 before_install:

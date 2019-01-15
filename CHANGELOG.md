@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 19.1.0
+- enabled app for all minor versions of ownCloud 10
+
 ## 18.11.0
 - enabled and tested app for Nextcloud 15
 

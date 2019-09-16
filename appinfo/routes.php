@@ -11,7 +11,7 @@
 
 namespace OCA\QOwnNotesAPI\AppInfo;
 
-use OCP\API;
+//use OCP\API;
 
 // $application = new Application();
 

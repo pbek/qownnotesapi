@@ -20,7 +20,7 @@ The only purpose of this App is to provide API access to your ownCloud server fo
 Clone the app into your Nextcloud / ownCloud apps directory:
 
 ```bash
-git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b master
+git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b develop
 ```
 
 Activate the app:

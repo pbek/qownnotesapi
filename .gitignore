@@ -1,3 +1,6 @@
 .idea/
 build/
 .directory
+docker/nextcloud/certificates/*
+*.gz
+*.db*

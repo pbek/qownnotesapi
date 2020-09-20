@@ -45,7 +45,6 @@ class NoteApiControllerTest extends TestCase {
 
 		$this->assertArrayHasKey( "file_name", $result );
 		$this->assertArrayHasKey( "versions", $result );
-//		$this->assertArraySubset( array( "file_name" => $fileName ), $result );
 		$this->assertEquals( $fileName, $result["file_name"] );
 	}
 

@@ -12,20 +12,9 @@
 namespace OCA\QOwnNotesAPI\AppInfo;
 
 use OCP\AppFramework\App;
-use OCA\QOwnNotesAPI\Capabilities;
 
 class Application extends App {
 	public function __construct(array $urlParams = array()) {
 		parent::__construct('qownnotesapi', $urlParams);
-//		$container = $this->getContainer();
-//		$server = $container->getServer();
-
-		/*
-		 * Register capabilities
-		 */
-//		$server->getCapabilitiesManager()->registerCapability(function() {
-//			return new Capabilities();
-//		});
-
 	}
 }

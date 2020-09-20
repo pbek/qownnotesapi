@@ -10,18 +10,3 @@
  */
 
 namespace OCA\QOwnNotesAPI\AppInfo;
-use OCP\AppFramework\App;
-
-//use OCA\QOwnNotesAPI\AppInfo\Application;
-
-
-//class Application extends App {
-//    public function __construct(array $urlParams = array()) {
-//        parent::__construct('qownnotesapi', $urlParams);
-//
-////		$container = $this->getContainer();
-////		$server = $container->getServer();
-//    }
-//}
-
-//$application = new Application();

@@ -14,9 +14,8 @@ env:
 
 matrix:
   allow_failures:
-    - php: hhvm
     - env: DB=pgsql CORE_BRANCH=master
-    - env: DB=mysql
+    - env: DB=pgsql
     - env: DB=mysql CORE_BRANCH=master
   include:
     - php: 5.6

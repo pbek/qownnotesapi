@@ -1,12 +1,12 @@
 <?php
 /**
- * ownCloud - qownnotesapi
+ * Nextcloud / ownCloud - QOwnNotesAPI
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
  * @author Patrizio Bekerle <patrizio@bekerle.com>
- * @copyright Patrizio Bekerle 2015
+ * @copyright Patrizio Bekerle 2015-2020
  */
 
 use OCA\QOwnNotesAPI\AppInfo\Application;
@@ -32,5 +32,4 @@ class AppTest extends TestCase {
         $appManager = $this->container->query('OCP\App\IAppManager');
         $this->assertTrue($appManager->isInstalled('qownnotesapi'));
     }
-
 }

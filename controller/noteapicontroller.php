@@ -1,12 +1,12 @@
 <?php
 /**
- * ownCloud - qownnotesapi
+ * Nextcloud / ownCloud - QOwnNotesAPI
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
  * @author Patrizio Bekerle <patrizio@bekerle.com>
- * @copyright Patrizio Bekerle 2015
+ * @copyright Patrizio Bekerle 2015-2020
  */
 
 namespace OCA\QOwnNotesAPI\Controller;
@@ -22,7 +22,7 @@ use OCA\Files_Trashbin\Trashbin;
 
 class NoteApiController extends ApiController {
 
-    var $user;
+    protected $user;
 
     /**
      * @param string $AppName
@@ -44,6 +44,8 @@ class NoteApiController extends ApiController {
      * @CORS
      *
      * @return array
+     * @throws \OCP\Lock\LockedException
+     * @throws \OC\User\NoUserException
      */
     public function getAllVersions() {
         $source = $this->request->getParam( "file_name", "" );
@@ -57,9 +59,6 @@ class NoteApiController extends ApiController {
 
             $users_view = new View('/'.$uid);
             $currentData = $users_view->file_get_contents('files/' . $filename);
-
-//            $previousData = $currentData;
-//            $versions = array_reverse( $versions, true );
 
             foreach ($versions as $versionData)
             {
@@ -82,11 +81,7 @@ class NoteApiController extends ApiController {
                     "diffHtml" => $html,
                     "data" => $data,
                 );
-
-//                $previousData = $data;
             }
-
-//            $versionsResults = array_reverse( $versionsResults );
         }
 
         return array(
@@ -102,7 +97,8 @@ class NoteApiController extends ApiController {
      * @NoCSRFRequired
      * @CORS
      *
-     * @return string
+     * @return string|array
+     * @throws Exception
      */
     public function getAppInfo() {
         $appManager = \OC::$server->getAppManager();
@@ -136,7 +132,8 @@ class NoteApiController extends ApiController {
      * @NoCSRFRequired
      * @CORS
      *
-     * @return string
+     * @return string|array
+     * @throws \OCP\Lock\LockedException
      */
     public function getTrashedNotes() {
         $dir = $this->request->getParam( "dir", "" );
@@ -225,13 +222,14 @@ class NoteApiController extends ApiController {
      * Restores a trashed note
      *
      * We try to mimic undelete.php to get all versions restored too.
+     * @return string|array
+     * @throws \OCP\Files\NotPermittedException
      * @see owncloud/core/apps/files_trashbin/ajax/undelete.php
      *
      * @NoAdminRequired
      * @NoCSRFRequired
      * @CORS
      *
-     * @return string
      */
     public function restoreTrashedNote() {
         $filename = $this->request->getParam( "file_name" );

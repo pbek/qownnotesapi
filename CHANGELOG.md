@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 20.9.0
+- enabled app for Nextcloud 20/21
+
 ## 20.1.0
 - enabled and tested app for Nextcloud 18
 

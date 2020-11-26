@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/nextcloud/
-FROM nextcloud:20-rc-apache
+FROM nextcloud:20-apache
 
 COPY entrypoint.sh /
 

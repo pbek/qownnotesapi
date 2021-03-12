@@ -32,7 +32,9 @@ class NoteApiController extends ApiController {
     public function __construct($AppName,
                                 $userId,
                                 IRequest $request) {
-        $this->user = $userId;
+        // For some reason $userId is null on ownCloud 10.3+ any more
+        // https://github.com/pbek/QOwnNotes/issues/1725
+        $this->user = $userId ? $userId : $_SERVER['PHP_AUTH_USER'];
         parent::__construct($AppName, $request);
     }
 
@@ -116,6 +118,7 @@ class NoteApiController extends ApiController {
         }
 
         return [
+            "user" => $this->user,
             "versions_app" => $versionsAppEnabled,
             "trash_app" => $trashAppEnabled,
             "versioning" => true,

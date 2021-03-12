@@ -17,6 +17,9 @@ check-code:
 sign-app:
 	docker-compose run --rm app ../sign-app.sh
 
+sign-app-owncloud:
+	docker-compose run --rm app ../sign-app-owncloud.sh
+
 test:
 	docker-compose run --rm app su -c "cd apps/qownnotesapi && make test" www-data
 

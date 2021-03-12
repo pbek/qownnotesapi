@@ -2,5 +2,6 @@
 build/
 .directory
 docker/nextcloud/certificates/*
+docker/owncloud/certificates/*
 *.gz
 *.db*

@@ -1,6 +1,8 @@
-# Deploying to the Nextcloud app store
+# Deploying to the app stores
 
-## Prerequisites
+## Nextcloud
+
+### Prerequisites
 
 - Copy your app certificate files to `./docker/nextcloud/certificates`
 
@@ -20,3 +22,19 @@
   release the app at [Upload app release](https://apps.nextcloud.com/developer/apps/releases/new)
     - You need the download link to `qownnotesapi-nc.tar.gz` from the GitHub release
 - The new version should then appear on the [QOwnNotesAPI store page](https://apps.nextcloud.com/apps/qownnotesapi)
+
+## ownCloud
+
+### Prerequisites
+
+- Copy your app certificate files to `./docker/owncloud/certificates`
+
+### Signing and releasing
+
+- Make sure the version in `appinfo/info.xml` and the `CHANGELOG.md` are updated
+- Sign the app with `cd docker && make sign-app-owncloud`
+    - You should now have a `qownnotesapi-oc.tar.gz` in your git directory
+    - Check the content of the archive for unwanted files (you can exclude more files in
+      `docker/owncloud/sign-app.sh`)
+- Upload `qownnotesapi-oc.tar.gz` on [ownCloud producs](https://marketplace.owncloud.com/account/products)
+- Publish app on [qownnotesapi](https://marketplace.owncloud.com/account/edit/qownnotesapi)!

@@ -4,6 +4,9 @@
 - added a workaround for the failing username detection in ownCloud 10.3+
   (for [#1725](https://github.com/pbek/QOwnNotes/issues/1725))
 
+## 20.9.0
+- enabled app for Nextcloud 20/21
+
 ## 20.1.0
 - enabled and tested app for Nextcloud 18
 

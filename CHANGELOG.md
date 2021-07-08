@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 21.7.0
+- enabled and tested app for Nextcloud 22
+
 ## 21.3.0
 - added a workaround for the failing username detection in ownCloud 10.3+
   (for [#1725](https://github.com/pbek/QOwnNotes/issues/1725))

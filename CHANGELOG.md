@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 21.12.0
+- enabled and tested app for Nextcloud 23
+
 ## 21.7.0
 - enabled and tested app for Nextcloud 22
 

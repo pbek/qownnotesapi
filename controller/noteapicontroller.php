@@ -51,44 +51,54 @@ class NoteApiController extends ApiController {
      */
     public function getAllVersions() {
         $source = $this->request->getParam( "file_name", "" );
-        list ($uid, $filename) = Storage::getUidAndFilename($source);
-        $versions = Storage::getVersions($uid, $filename, $source);
-        $versionsResults = array();
+        $errorMessages = array();
 
-        if (is_array( $versions ) && (count($versions) > 0))
-        {
-            require_once __DIR__ . '/../3rdparty/finediff/finediff.php';
+        try {
+            list ($uid, $filename) = Storage::getUidAndFilename($source);
+            $versions = Storage::getVersions($uid, $filename, $source);
+            $versionsResults = array();
 
-            $users_view = new View('/'.$uid);
-            $currentData = $users_view->file_get_contents('files/' . $filename);
-
-            foreach ($versions as $versionData)
+            if (is_array( $versions ) && (count($versions) > 0))
             {
-                // get timestamp of version
-                $mtime = (int)$versionData["version"];
+                require_once __DIR__ . '/../3rdparty/finediff/finediff.php';
 
-                // get filename of note version
-                $versionFileName = 'files_versions/' . $filename . '.v' . $mtime;
+                $users_view = new View('/'.$uid);
+                $currentData = $users_view->file_get_contents('files/' . $filename);
 
-                // load the data from the file
-                $data = $users_view->file_get_contents($versionFileName);
+                foreach ($versions as $versionData)
+                {
+                    // get timestamp of version
+                    $mtime = (int)$versionData["version"];
 
-                // calculate diff between versions
-                $opcodes = \FineDiff::getDiffOpcodes($currentData, $data);
-                $html = \FineDiff::renderDiffToHTMLFromOpcodes($currentData, $opcodes);
+                    // get filename of note version
+                    $versionFileName = 'files_versions/' . $filename . '.v' . $mtime;
 
-                $versionsResults[] = array(
-                    "timestamp" => $mtime,
-                    "humanReadableTimestamp" => $versionData["humanReadableTimestamp"],
-                    "diffHtml" => $html,
-                    "data" => $data,
-                );
+                    // load the data from the file
+                    $data = $users_view->file_get_contents($versionFileName);
+
+                    // calculate diff between versions
+                    $opcodes = \FineDiff::getDiffOpcodes($currentData, $data);
+                    $html = \FineDiff::renderDiffToHTMLFromOpcodes($currentData, $opcodes);
+
+                    $versionsResults[] = array(
+                        "timestamp" => $mtime,
+                        "humanReadableTimestamp" => $versionData["humanReadableTimestamp"],
+                        "diffHtml" => $html,
+                        "data" => $data,
+                    );
+                }
             }
+        } catch (\OCP\Files\NotFoundException $exception) {
+            // Requested file was not found, silently fail (for now)
+            $versionsResults = array();
+
+            $errorMessages[] = "Requested file was not found!";
         }
 
         return array(
             "file_name" => $source,
-            "versions" => $versionsResults
+            "versions" => $versionsResults,
+            "error_messages" => $errorMessages
         );
     }
 

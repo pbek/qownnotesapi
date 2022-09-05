@@ -13,7 +13,9 @@ QOwnNotesAPI is the Nextcloud / ownCloud API App for [QOwnNotes](http://www.qown
 
 The only purpose of this App is to provide API access to your ownCloud server for your QOwnNotes desktop installation, you cannot use this Nextcloud/ownCloud App for anything else, if you don't have QOwnNotes installed on your desktop computer! 
 
-## Installation
+## Installation from git repository
+
+You may only want this if you don't want to use the Nextcloud / ownCloud stores!
 
 Clone the app into your Nextcloud / ownCloud apps directory:
 

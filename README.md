@@ -6,7 +6,7 @@
 [ownCloud Apps page](https://marketplace.owncloud.com/apps/qownnotesapi) |
 [Nextcloud Apps page](https://apps.nextcloud.com/apps/qownnotesapi)
 
-[![Code Climate](https://codeclimate.com/github/pbek/qownnotesapi/badges/gpa.svg)](https://codeclimate.com/github/pbek/qownnotesapi) |
+[![Code Climate](https://codeclimate.com/github/pbek/qownnotesapi/badges/gpa.svg)](https://codeclimate.com/github/pbek/qownnotesapi)
 [![Test Coverage](https://codeclimate.com/github/pbek/qownnotesapi/badges/coverage.svg)](https://codeclimate.com/github/pbek/qownnotesapi/coverage)
 
 QOwnNotesAPI is the Nextcloud / ownCloud API App for [QOwnNotes](http://www.qownnotes.org), the open source notepad for Linux, macOS and Windows, that works together with the notes application of Nextcloud/ownCloud.

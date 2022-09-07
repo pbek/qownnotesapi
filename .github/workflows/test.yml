@@ -33,7 +33,7 @@ jobs:
       with:
         path: nextcloud/apps/qownnotesapi
     - name: Test app
-      run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ app:check-code qownnotesapi && php -f nextcloud/occ background:cron && php -f nextcloud/occ app:test qownnotesapi
+      run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ background:cron && php -f nextcloud/occ app:test qownnotesapi
 #    - name: Install dependencies
 #      working-directory: nextcloud/apps/qownnotesapi
 #      run: composer install

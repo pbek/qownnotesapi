@@ -1,0 +1,52 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
+        nextcloud-versions: ['master', 'stable24', 'stable23', 'stable22']
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
+    steps:
+    - name: Set up php${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
+        coverage: xdebug
+    - name: Checkout Nextcloud
+      run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+    - name: Patch version check for nightly PHP
+      if: ${{ matrix.php-versions == '8.2' }}
+      run: echo "<?php" > nextcloud/lib/versioncheck.php
+    - name: Install Nextcloud
+      run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+    - name: Checkout qownnotesapi
+      uses: actions/checkout@v3
+      with:
+        path: nextcloud/apps/qownnotesapi
+    - name: Test app
+      run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ app:check-code qownnotesapi && php -f nextcloud/occ background:cron && php -f nextcloud/occ app:test qownnotesapi
+#    - name: Install dependencies
+#      working-directory: nextcloud/apps/qownnotesapi
+#      run: composer install
+    - name: Run tests
+      working-directory: nextcloud/apps/qownnotesapi
+      run: phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
+      if: ${{ matrix.php-versions == '8.0' }}
+      env:
+        XDEBUG_MODE: coverage
+#    - name: Report coverage
+#      uses: codecov/codecov-action@v3.1.0
+#      if: ${{ always() && matrix.php-versions == '8.0' }}
+#      with:
+#        file: ./nextcloud/apps/qownnotesapi/tests/clover.unit.xml
+#        flags: unittests
+#        fail_ci_if_error: true

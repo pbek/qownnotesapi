@@ -44,9 +44,13 @@ jobs:
 #    - name: Install dependencies
 #      working-directory: nextcloud/apps/qownnotesapi
 #      run: composer install
+#    - name: PHPUnit tests
+#      uses: php-actions/phpunit@v3
+#      with:
+#        configuration: phpunit.coverage.xml
     - name: Run tests
       working-directory: nextcloud/apps/qownnotesapi
-      run: phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
+      run: composer global require phpunit/phpunit && phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
       if: ${{ matrix.php-versions == '8.0' }}
       env:
         XDEBUG_MODE: coverage

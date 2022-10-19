@@ -2,7 +2,7 @@
 
 ## 22.10.0
 - the code got a cleanup
-- enabled and tested app for Nextcloud 25
+- enabled and tested app for Nextcloud 25 (for [#41](https://github.com/pbek/qownnotesapi/issues/41))
 
 ## 22.5.0
 - errors for not found files in the version API are now caught

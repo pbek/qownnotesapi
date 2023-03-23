@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 23.3.0
+- enabled and tested app for Nextcloud 26 (for [#42](https://github.com/pbek/qownnotesapi/issues/42))
+
 ## 22.10.0
 - the code got a cleanup
 - enabled and tested app for Nextcloud 25 (for [#41](https://github.com/pbek/qownnotesapi/issues/41))

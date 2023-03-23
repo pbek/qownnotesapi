@@ -1,5 +1,41 @@
 # QOwnNotesAPI Change Log
 
+## 23.3.0
+- enabled and tested app for Nextcloud 26 (for [#42](https://github.com/pbek/qownnotesapi/issues/42))
+
+## 22.10.0
+- the code got a cleanup
+- enabled and tested app for Nextcloud 25 (for [#41](https://github.com/pbek/qownnotesapi/issues/41))
+
+## 22.5.0
+- errors for not found files in the version API are now caught
+- enabled and tested app for Nextcloud 24 (for [#38](https://github.com/pbek/qownnotesapi/issues/38))
+
+## 21.12.0
+- enabled and tested app for Nextcloud 23 (for [#36](https://github.com/pbek/qownnotesapi/issues/36))
+
+## 21.7.0
+- enabled and tested app for Nextcloud 22
+
+## 21.3.0
+- added a workaround for the failing username detection in ownCloud 10.3+
+  (for [#1725](https://github.com/pbek/QOwnNotes/issues/1725))
+
+## 20.9.0
+- enabled app for Nextcloud 20/21
+
+## 20.1.0
+- enabled and tested app for Nextcloud 18
+
+## 19.9.0
+- enabled and tested app for Nextcloud 17
+
+## 19.4.0
+- enabled and tested app for Nextcloud 16
+
+## 19.1.0
+- enabled app for all minor versions of ownCloud 10
+
 ## 18.11.0
 - enabled and tested app for Nextcloud 15
 

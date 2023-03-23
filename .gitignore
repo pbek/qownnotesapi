@@ -1,3 +1,9 @@
 .idea/
 build/
 .directory
+docker/nextcloud/certificates/*
+docker/owncloud/certificates/*
+*.gz
+*.db*
+*.cache
+vendor

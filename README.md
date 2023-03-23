@@ -6,21 +6,21 @@
 [ownCloud Apps page](https://marketplace.owncloud.com/apps/qownnotesapi) |
 [Nextcloud Apps page](https://apps.nextcloud.com/apps/qownnotesapi)
 
-[![Build Status](https://travis-ci.org/pbek/qownnotesapi.svg?branch=develop)](https://travis-ci.org/pbek/qownnotesapi)
 [![Code Climate](https://codeclimate.com/github/pbek/qownnotesapi/badges/gpa.svg)](https://codeclimate.com/github/pbek/qownnotesapi)
 [![Test Coverage](https://codeclimate.com/github/pbek/qownnotesapi/badges/coverage.svg)](https://codeclimate.com/github/pbek/qownnotesapi/coverage)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/967e5280-358c-48f2-9841-e94a447066f8/mini.png)](https://insight.sensiolabs.com/projects/967e5280-358c-48f2-9841-e94a447066f8)
 
-QOwnNotesAPI is the ownCloud API for [QOwnNotes](http://www.qownnotes.org), the open source (GPL) notepad for Linux, Mac OS X and Windows, that works together with the notes application of ownCloud.
+QOwnNotesAPI is the Nextcloud / ownCloud API App for [QOwnNotes](http://www.qownnotes.org), the open source notepad for Linux, macOS and Windows, that works together with the notes application of Nextcloud/ownCloud.
 
-The only purpose of this App is to provide API access to your ownCloud server for your QOwnNotes desktop installation, you cannot use this ownCloud App for anything else, if you don't have QOwnNotes installed on your desktop computer! 
+The only purpose of this App is to provide API access to your Nextcloud / ownCloud server for your QOwnNotes desktop installation, you cannot use this Nextcloud / ownCloud App for anything else, if you don't have QOwnNotes installed on your desktop computer! 
 
-## Installation
+## Installation from git repository
+
+You may only want this if you don't want to use the Nextcloud / ownCloud store!
 
 Clone the app into your Nextcloud / ownCloud apps directory:
 
 ```bash
-git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b master
+git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b develop
 ```
 
 Activate the app:

@@ -17,6 +17,8 @@
 - Create a new release on [QOwnNotesAPI releases](https://github.com/pbek/qownnotesapi/releases)
   with the version like `22.5.0` as *Tag name* and *Release title* and the changelog text of the current
   release as *Release notes*
+    - Alternatively you can push to the `release` branch and the GitHub action will create
+      a draft release for you
     - You also need to upload `qownnotesapi-nc.tar.gz` to the release and get its url
       like `https://github.com/pbek/qownnotesapi/releases/download/22.5.0/qownnotesapi-nc.tar.gz`
 - Take the text from *Signature for your app archive*, which was printed by the sign-app command and

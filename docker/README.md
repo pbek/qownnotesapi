@@ -24,5 +24,5 @@ There also is a [logging web interface](http://localhost:8081/index.php/settings
 In case something is broken try to reset the container:
 
 ```bash
-docker-compose build; docker-compose down; docker volume prune -f
+docker-compose build; docker-compose down; docker volume rm nextcloud-qownnotesapi_nextcloud
 ```

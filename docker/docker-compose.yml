@@ -6,7 +6,6 @@ services:
     ports:
       - 8081:80
     environment:
-      - WEBPASSWORD_ORIGINS=http://127.0.0.1:8001,http://localhost:8001,http://localhost:8082,http://bs-local.com:8001
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_ADMIN_PASSWORD=admin
       - SQLITE_DATABASE=mydb

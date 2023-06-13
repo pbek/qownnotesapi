@@ -11,7 +11,11 @@ DEPLOYMENT_FILE=${APP_SOURCE}/${APP_NAME}-nc.tar.gz
 
 rm -rf ${APP_DEST} && \
 mkdir ${APP_DEST} && \
-rsync -a --exclude .git* --exclude .gitlab-ci* --exclude .github --exclude screenshot* --exclude docs --exclude tests --exclude vendor --exclude package.* --exclude Makefile --exclude *.db* --exclude docker --exclude *.phar --exclude *.gz --exclude .idea ${APP_SOURCE}/ ${APP_DEST} && \
+rsync -a --exclude .git* --exclude .gitlab-ci* --exclude .github --exclude screenshot* \
+         --exclude docs --exclude tests --exclude vendor --exclude package.* --exclude Makefile \
+         --exclude *.db* --exclude docker --exclude *.phar --exclude *.gz --exclude .idea \
+         --exclude=shell.nix --exclude=.envrc --exclude .direnv \
+         ${APP_SOURCE}/ ${APP_DEST} && \
 su -m -c "./occ integrity:sign-app \
   --privateKey=${CERT_PATH}/${APP_NAME}.key \
   --certificate=${CERT_PATH}/${APP_NAME}.crt --path=${APP_DEST}" www-data && \

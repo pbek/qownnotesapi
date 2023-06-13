@@ -64,7 +64,7 @@ class NoteApiController extends ApiController
             $versionsResults = [];
 
             if (is_array($versions) && (count($versions) > 0)) {
-                require_once __DIR__.'/../3rdparty/finediff/finediff.php';
+                require_once __DIR__.'/../../3rdparty/finediff/finediff.php';
 
                 $users_view = new View('/'.$uid);
                 $currentData = $users_view->file_get_contents('files/'.$filename);

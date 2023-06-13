@@ -21,7 +21,7 @@ check-code:
 	$(DOCKER_COMPOSE) run --rm app su -c "./occ app:check-code qownnotesapi" www-data
 
 sign-app:
-	$(DOCKER_COMPOSE) run --rm app ../sign-app.sh
+	$(DOCKER_COMPOSE) run --rm app ../sign-app.sh www-data
 
 sign-app-owncloud:
 	$(DOCKER_COMPOSE) run --rm app ../sign-app-owncloud.sh

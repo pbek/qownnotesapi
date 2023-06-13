@@ -2,6 +2,8 @@
 
 ## 23.6.0
 - re-did the application structure for Nextcloud 27 (for [#43](https://github.com/pbek/qownnotesapi/issues/43))
+- updated and tested app for Nextcloud 27 (for [#44](https://github.com/pbek/qownnotesapi/issues/44))
+  - the min-version was raised to 22
 
 ## 23.3.0
 - enabled and tested app for Nextcloud 26 (for [#42](https://github.com/pbek/qownnotesapi/issues/42))

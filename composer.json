@@ -23,5 +23,4 @@
             "@php vendor/bin/php-cs-fixer --ansi fix --dry-run --diff"
         ]
     }
-
 }

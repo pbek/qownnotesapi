@@ -26,17 +26,17 @@ class NoteApiController extends ApiController
     protected $user;
 
     /**
-     * @param string $AppName
+     * @param string $appName
      * @param string $userId
      */
-    public function __construct($AppName,
+    public function __construct($appName,
                                 $userId,
                                 IRequest $request)
     {
         // For some reason $userId is null on ownCloud 10.3+ any more
         // https://github.com/pbek/QOwnNotes/issues/1725
         $this->user = $userId ? $userId : $_SERVER['PHP_AUTH_USER'];
-        parent::__construct($AppName, $request);
+        parent::__construct($appName, $request);
     }
 
     /**

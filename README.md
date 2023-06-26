@@ -20,7 +20,7 @@ You may only want this if you don't want to use the Nextcloud / ownCloud store!
 Clone the app into your Nextcloud / ownCloud apps directory:
 
 ```bash
-git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b develop
+git clone https://github.com/pbek/qownnotesapi.git apps/qownnotesapi -b main
 ```
 
 Activate the app:

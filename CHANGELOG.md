@@ -1,5 +1,9 @@
 # QOwnNotesAPI Change Log
 
+## 23.12.0
+- enabled and tested app for Nextcloud 28 (for [#46](https://github.com/pbek/qownnotesapi/issues/46))
+- updated the deprecated variable `$AppName` to `$appName`
+
 ## 23.6.0
 - re-did the application structure for Nextcloud 27 (for [#43](https://github.com/pbek/qownnotesapi/issues/43))
 - updated and tested app for Nextcloud 27 (for [#44](https://github.com/pbek/qownnotesapi/issues/44))

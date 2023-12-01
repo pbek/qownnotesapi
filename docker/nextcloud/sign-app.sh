@@ -14,7 +14,8 @@ mkdir ${APP_DEST} && \
 rsync -a --exclude .git* --exclude .gitlab-ci* --exclude .github --exclude screenshot* \
          --exclude docs --exclude tests --exclude vendor --exclude package.* --exclude Makefile \
          --exclude *.db* --exclude docker --exclude *.phar --exclude *.gz --exclude .idea \
-         --exclude=shell.nix --exclude=.envrc --exclude .direnv \
+         --exclude=shell.nix --exclude=.envrc --exclude .direnv --exclude .codeclimate.yml \
+          --exclude .editorconfig --exclude .php_cs* --exclude .php-cs* --exclude .travis.yml \
          ${APP_SOURCE}/ ${APP_DEST} && \
 su -m -c "./occ integrity:sign-app \
   --privateKey=${CERT_PATH}/${APP_NAME}.key \

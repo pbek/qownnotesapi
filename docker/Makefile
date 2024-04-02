@@ -12,10 +12,16 @@ fetch-db:
 	$(DOCKER_COMPOSE) run --rm app su -c "cp data/mydb.db apps/qownnotesapi" www-data
 
 push-db:
-	$(DOCKER_COMPOSE) run --rm app su -c "cp apps/qownnotesapi/mydb.db data" www-data
+	$(DOCKER_COMPOSE) run --rm app su -c "cp apps/qownnotesapi/mydb.db* data" www-data
 
 bash:
 	$(DOCKER_COMPOSE) run --rm app su -c "bash" www-data
+
+bash-root:
+	$(DOCKER_COMPOSE) run --rm app bash
+
+maintenance-mode-off:
+	$(DOCKER_COMPOSE) run --rm app su -c "./occ maintenance:mode --off" www-data
 
 check-code:
 	$(DOCKER_COMPOSE) run --rm app su -c "./occ app:check-code qownnotesapi" www-data
@@ -31,3 +37,6 @@ test:
 
 show-log:
 	$(DOCKER_COMPOSE) run --rm app tail -f /var/www/html/data/nextcloud.log
+
+remove-volumes:
+	docker volume rm nextcloud-qownnotesapi_nextcloud

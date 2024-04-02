@@ -1,6 +1,7 @@
 # https://hub.docker.com/_/nextcloud/
 #FROM nextcloud:26-apache
 #FROM nextcloud:27-apache
+#FROM nextcloud:28-apache
 #FROM ghcr.io/pbek/nextcloud-docker-pre-apache:latest
 FROM ghcr.io/digital-blueprint/nextcloud-docker-pre-apache:latest
 

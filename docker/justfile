@@ -27,6 +27,9 @@ bash:
 bash-root:
     {{ dockerComposeCommand }} run --rm app bash
 
+slim-shell:
+    slim debug --target nextcloud-qownnotesapi-app-1
+
 maintenance-mode-off:
     {{ dockerComposeCommand }} run --rm app su -c "./occ maintenance:mode --off" www-data
 

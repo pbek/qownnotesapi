@@ -6,6 +6,7 @@
       zellij
       php83
       php83Packages.composer
+      docker-slim
     ];
 }
 

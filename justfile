@@ -17,8 +17,15 @@ term:
 term-kill:
     zellij delete-session qownnotesapi -f
 
+# Apply the patch to the qownnotesapi repository
 git-apply-patch:
     git apply {{ transferDir }}/qownnotesapi.patch
+
+# Create a patch from the staged changes in the qownnotesapi repository
+@git-create-patch:
+    echo "transferDir: {{ transferDir }}"
+    git diff --no-ext-diff --staged --binary > {{ transferDir }}/qownnotesapi.patch
+    ls -l1t {{ transferDir }}/ | head -2
 
 # Format all justfiles
 just-format:

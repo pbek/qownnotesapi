@@ -20,6 +20,7 @@ use OCA\Files_Trashbin\Trashbin;
 use OCA\Files_Versions\Storage;
 use OCP\AppFramework\ApiController;
 use OCP\IRequest;
+use OCP\Util;
 
 class NoteApiController extends ApiController
 {
@@ -57,11 +58,11 @@ class NoteApiController extends ApiController
     {
         $source = $this->request->getParam('file_name', '');
         $errorMessages = [];
+        $versionsResults = [];
 
         try {
             [$uid, $filename] = Storage::getUidAndFilename($source);
             $versions = Storage::getVersions($uid, $filename, $source);
-            $versionsResults = [];
 
             if (is_array($versions) && (count($versions) > 0)) {
                 require_once __DIR__.'/../../3rdparty/finediff/finediff.php';
@@ -93,9 +94,9 @@ class NoteApiController extends ApiController
             }
         } catch (\OCP\Files\NotFoundException $exception) {
             // Requested file was not found, silently fail (for now)
-            $versionsResults = [];
-
             $errorMessages[] = 'Requested file was not found!';
+        } catch (Exception $exception) {
+            $errorMessages[] = 'An error happened: ' . $exception->getMessage();
         }
 
         return [

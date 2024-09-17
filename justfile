@@ -18,7 +18,7 @@ term-kill:
     zellij delete-session qownnotesapi -f
 
 git-apply-patch:
-    git apply ${transferDir}/qownnotesapi.patch
+    git apply {{ transferDir }}/qownnotesapi.patch
 
 # Format all justfiles
 just-format:

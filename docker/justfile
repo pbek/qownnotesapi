@@ -49,4 +49,5 @@ show-log:
     {{ dockerComposeCommand }} run --rm app tail -f /var/www/html/data/nextcloud.log
 
 remove-volumes:
+    docker compose down
     docker volume rm nextcloud-qownnotesapi_nextcloud

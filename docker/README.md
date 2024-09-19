@@ -14,7 +14,7 @@ log in to your Nextcloud instance.
 For debugging, you can show the `nextcloud.log`:
 
 ```bash
-make show-log
+just show-log
 ```
 
 There also is a [logging web interface](http://localhost:8081/index.php/settings/admin/logging).
@@ -24,5 +24,6 @@ There also is a [logging web interface](http://localhost:8081/index.php/settings
 In case something is broken try to reset the container:
 
 ```bash
-docker compose build; docker compose down; docker volume rm nextcloud-qownnotesapi_nextcloud
+just build
+just reset
 ```

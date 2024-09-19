@@ -1,5 +1,11 @@
 # QOwnNotesAPI Change Log
 
+## 24.9.0
+- Enabled and tested app for Nextcloud 30 (for [#49](https://github.com/pbek/qownnotesapi/issues/49))
+  - There were troubles with the version API that didn't always happen when trying to access the versions of a file:
+    `Call to a member function getOwner() on null in file '/var/www/html/lib/private/Files/Filesystem.php' line 728`
+    - It's unclear why this happens, but it seems to be a problem with the Nextcloud server and not the app
+
 ## 24.4.0
 - enabled and tested app for Nextcloud 29 (for [#48](https://github.com/pbek/qownnotesapi/issues/48))
 

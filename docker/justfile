@@ -61,7 +61,7 @@ sign-app-owncloud:
 
 # Run the tests
 test:
-    {{ dockerComposeCommand }} run --rm app su -c "cd apps/qownnotesapi && make test" www-data
+    {{ dockerComposeCommand }} run --rm app su -c "cd apps/qownnotesapi && just test" www-data
 
 # Show Nextcloud logs
 show-log:

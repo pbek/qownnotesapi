@@ -10,4 +10,4 @@ check-code:
 	docker-compose exec owncloud su -c "./occ app:check-code qownnotesapi" www-data
 
 test:
-	docker-compose exec owncloud su -c "cd apps/qownnotesapi && make test" www-data
+	docker-compose exec owncloud su -c "cd apps/qownnotesapi && just test" www-data

@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 24.11.0
+- The versioning API was fixed for Nextcloud 30 (for [#50](https://github.com/pbek/qownnotesapi/issues/50))
+
 ## 24.9.0
 - Enabled and tested app for Nextcloud 30 (for [#49](https://github.com/pbek/qownnotesapi/issues/49))
   - There were troubles with the version API that didn't always happen when trying to access the versions of a file:

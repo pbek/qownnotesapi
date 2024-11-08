@@ -14,12 +14,17 @@ declare(strict_types=1);
 namespace OCA\QOwnNotesAPI\Controller;
 
 use Exception;
+use OC\Files\Filesystem;
 use OC\Files\View;
+use OC\User\NoUserException;
+use OC_User;
 use OCA\Files_Trashbin\Helper;
 use OCA\Files_Trashbin\Trashbin;
 use OCA\Files_Versions\Storage;
 use OCP\AppFramework\ApiController;
+use OCP\Files\NotFoundException;
 use OCP\IRequest;
+use OCP\IUserManager;
 use OCP\Util;
 
 class NoteApiController extends ApiController
@@ -61,7 +66,11 @@ class NoteApiController extends ApiController
         $versionsResults = [];
 
         try {
-            [$uid, $filename] = Storage::getUidAndFilename($source);
+            // Make sure the view is initialized and use our own implementation of getUidAndFilename to prevent issues in Nextcloud 30
+            // See https://github.com/pbek/qownnotesapi/issues/50
+            Filesystem::getView();
+            [$uid, $filename] = self::getUidAndFilename($source);
+
             $versions = Storage::getVersions($uid, $filename, $source);
 
             if (is_array($versions) && (count($versions) > 0)) {
@@ -104,6 +113,40 @@ class NoteApiController extends ApiController
             'versions' => $versionsResults,
             'error_messages' => $errorMessages,
         ];
+    }
+
+    /**
+     * Get the UID of the owner of the file and the path to the file relative to
+     * owners files folder
+     * This is a copy of \OCA\Files_Versions\Storage::getUidAndFilename
+     *
+     * @param string $filename
+     * @return array
+     * @throws NoUserException
+     */
+    protected static function getUidAndFilename($filename) {
+        $uid = Filesystem::getOwner($filename);
+        $userManager = \OC::$server->get(IUserManager::class);
+        // if the user with the UID doesn't exists, e.g. because the UID points
+        // to a remote user with a federated cloud ID we use the current logged-in
+        // user. We need a valid local user to create the versions
+        if (!$userManager->userExists($uid)) {
+            $uid = OC_User::getUser();
+        }
+        Filesystem::initMountPoints($uid);
+        if ($uid !== OC_User::getUser()) {
+            $info = Filesystem::getFileInfo($filename);
+            $ownerView = new View('/' . $uid . '/files');
+            try {
+                $filename = $ownerView->getPath($info['fileid']);
+                // make sure that the file name doesn't end with a trailing slash
+                // can for example happen single files shared across servers
+                $filename = rtrim($filename, '/');
+            } catch (NotFoundException $e) {
+                $filename = null;
+            }
+        }
+        return [$uid, $filename];
     }
 
     /**

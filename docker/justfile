@@ -71,3 +71,8 @@ show-log:
 reset:
     docker compose down
     docker volume rm {{ volumeName }}
+
+# Open the browser with the app
+[group('dev')]
+open-browser:
+    xdg-open http://localhost:8081

@@ -34,7 +34,7 @@ class NoteApiController extends ApiController
                                 $userId,
                                 IRequest $request)
     {
-        // For some reason $userId is null on ownCloud 10.3+ any more
+        // For some reason $userId is null on ownCloud 10.3+ anymore
         // https://github.com/pbek/QOwnNotes/issues/1725
         $this->user = $userId ? $userId : $_SERVER['PHP_AUTH_USER'];
         parent::__construct($appName, $request);

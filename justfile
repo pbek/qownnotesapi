@@ -8,27 +8,28 @@ default:
 # Variables
 
 transferDir := `if [ -d "$HOME/NextcloudPrivate/Transfer" ]; then echo "$HOME/NextcloudPrivate/Transfer"; else echo "$HOME/Nextcloud/Transfer"; fi`
+projectName := 'qownnotesapi'
 
-# Open a terminal with the qownnotesapi session
+# Open a terminal with the project session
 [group('dev')]
 term:
-    zellij --layout term.kdl attach qownnotesapi -c
+    zellij --layout term.kdl attach {{ projectName }} -c
 
-# Kill the qownnotesapi session
+# Kill the project session
 [group('dev')]
 term-kill:
-    zellij delete-session qownnotesapi -f
+    zellij delete-session {{ projectName }} -f
 
-# Apply the patch to the qownnotesapi repository
+# Apply the patch to the project repository
 [group('patch')]
 git-apply-patch:
-    git apply {{ transferDir }}/qownnotesapi.patch
+    git apply {{ transferDir }}/{{ projectName }}.patch
 
-# Create a patch from the staged changes in the qownnotesapi repository
+# Create a patch from the staged changes in the project repository
 [group('patch')]
 @git-create-patch:
     echo "transferDir: {{ transferDir }}"
-    git diff --no-ext-diff --staged --binary > {{ transferDir }}/qownnotesapi.patch
+    git diff --no-ext-diff --staged --binary > {{ transferDir }}/{{ projectName }}.patch
     ls -l1t {{ transferDir }}/ | head -2
 
 # Format all justfiles

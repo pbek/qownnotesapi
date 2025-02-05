@@ -32,6 +32,11 @@ git-apply-patch:
     git diff --no-ext-diff --staged --binary > {{ transferDir }}/{{ projectName }}.patch
     ls -l1t {{ transferDir }}/ | head -2
 
+# Run the GitHub Actions test workflow locally with act
+[group('dev')]
+github-run-test:
+    act -W .github/workflows/test.yml
+
 # Format all justfiles
 [group('linter')]
 just-format:

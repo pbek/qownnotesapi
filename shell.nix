@@ -7,6 +7,6 @@
       php83
       php83Packages.composer
       docker-slim
+      act # Run GitHub Actions locally
     ];
 }
-

@@ -1,5 +1,8 @@
 # QOwnNotesAPI Change Log
 
+## 25.2.0
+- Enabled and tested app for Nextcloud 31 (for [#51](https://github.com/pbek/qownnotesapi/issues/51))
+
 ## 24.11.0
 - The versioning API was fixed for Nextcloud 30 (for [#50](https://github.com/pbek/qownnotesapi/issues/50))
 

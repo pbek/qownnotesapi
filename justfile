@@ -37,6 +37,11 @@ git-apply-patch:
 github-run-test:
     act -W .github/workflows/test.yml
 
+# Open the project in the browser
+[group('dev')]
+open-browser:
+    xdg-open http://localhost:8081
+
 # Format all justfiles
 [group('linter')]
 just-format:

@@ -12,13 +12,17 @@ projectName := 'qownnotesapi'
 
 # Open a terminal with the project session
 [group('dev')]
-term:
+term-run:
     zellij --layout term.kdl attach {{ projectName }} -c
 
 # Kill the project session
 [group('dev')]
 term-kill:
-    zellij delete-session {{ projectName }} -f
+    -zellij delete-session {{ projectName }} -f
+
+# Kill and run a terminal with the project session
+[group('dev')]
+term: term-kill term-run
 
 # Apply the patch to the project repository
 [group('patch')]

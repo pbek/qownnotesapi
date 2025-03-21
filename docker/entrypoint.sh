@@ -61,18 +61,18 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
             echo 'session.save_handler = redis'
             # check if redis host is an unix socket path
             if [ "$(echo "$REDIS_HOST" | cut -c1-1)" = "/" ]; then
-              if [ -n "${REDIS_HOST_PASSWORD+x}" ]; then
-                echo "session.save_path = \"unix://${REDIS_HOST}?auth=${REDIS_HOST_PASSWORD}\""
-              else
-                echo "session.save_path = \"unix://${REDIS_HOST}\""
-              fi
+                if [ -n "${REDIS_HOST_PASSWORD+x}" ]; then
+                    echo "session.save_path = \"unix://${REDIS_HOST}?auth=${REDIS_HOST_PASSWORD}\""
+                else
+                    echo "session.save_path = \"unix://${REDIS_HOST}\""
+                fi
             # check if redis password has been set
             elif [ -n "${REDIS_HOST_PASSWORD+x}" ]; then
                 echo "session.save_path = \"tcp://${REDIS_HOST}:${REDIS_HOST_PORT:=6379}?auth=${REDIS_HOST_PASSWORD}\""
             else
                 echo "session.save_path = \"tcp://${REDIS_HOST}:${REDIS_HOST_PORT:=6379}\""
             fi
-        } > /usr/local/etc/php/conf.d/redis-session.ini
+        } >/usr/local/etc/php/conf.d/redis-session.ini
     fi
 
     installed_version="0.0.0.0"
@@ -92,7 +92,7 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
         echo "Initializing nextcloud $image_version ..."
         if [ "$installed_version" != "0.0.0.0" ]; then
             echo "Upgrading nextcloud from $installed_version ..."
-            run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" > /tmp/list_before
+            run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" >/tmp/list_before
         fi
         if [ "$(id -u)" = 0 ]; then
             rsync_options="-rlDog --chown www-data:root"
@@ -153,10 +153,9 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                     echo "starting nextcloud installation"
                     max_retries=10
                     try=0
-                    until run_as "php /var/www/html/occ maintenance:install $install_options" || [ "$try" -gt "$max_retries" ]
-                    do
+                    until run_as "php /var/www/html/occ maintenance:install $install_options" || [ "$try" -gt "$max_retries" ]; do
                         echo "retrying install..."
-                        try=$((try+1))
+                        try=$((try + 1))
                         sleep 10s
                     done
                     if [ "$try" -gt "$max_retries" ]; then
@@ -166,10 +165,10 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                     if [ -n "${NEXTCLOUD_TRUSTED_DOMAINS+x}" ]; then
                         echo "setting trusted domains…"
                         NC_TRUSTED_DOMAIN_IDX=1
-                        for DOMAIN in $NEXTCLOUD_TRUSTED_DOMAINS ; do
+                        for DOMAIN in $NEXTCLOUD_TRUSTED_DOMAINS; do
                             DOMAIN=$(echo "$DOMAIN" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
                             run_as "php /var/www/html/occ config:system:set trusted_domains $NC_TRUSTED_DOMAIN_IDX --value=$DOMAIN"
-                            NC_TRUSTED_DOMAIN_IDX=$(($NC_TRUSTED_DOMAIN_IDX+1))
+                            NC_TRUSTED_DOMAIN_IDX=$((NC_TRUSTED_DOMAIN_IDX + 1))
                         done
                     fi
                 else
@@ -180,7 +179,7 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
         else
             run_as 'php /var/www/html/occ upgrade'
 
-            run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" > /tmp/list_after
+            run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" >/tmp/list_after
             echo "The following apps have been disabled:"
             diff /tmp/list_before /tmp/list_after | grep '<' | cut -d- -f2 | cut -d: -f1
             rm -f /tmp/list_before /tmp/list_after

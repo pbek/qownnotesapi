@@ -4,4 +4,4 @@ languages:
   PHP: true
   Python: false
 exclude_paths:
-- "3rdparty/*"
+  - "3rdparty/*"

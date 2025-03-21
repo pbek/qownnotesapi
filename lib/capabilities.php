@@ -18,17 +18,15 @@ use OCP\Capabilities\ICapability;
 /**
  * Class Capabilities.
  */
-class Capabilities implements ICapability
-{
-    /**
-     * @return array
-     */
-    public static function getCapabilities()
-    {
-        return [
-            'qownnotes' => [
-                'versioning' => true,
-            ],
-        ];
-    }
+class Capabilities implements ICapability {
+	/**
+	 * @return array
+	 */
+	public static function getCapabilities() {
+		return [
+			'qownnotes' => [
+				'versioning' => true,
+			],
+		];
+	}
 }

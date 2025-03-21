@@ -1,4 +1,3 @@
 # Authors
 
-* Patrizio Bekerle: <patrizio@bekerle.com>
-
+- Patrizio Bekerle: <patrizio@bekerle.com>

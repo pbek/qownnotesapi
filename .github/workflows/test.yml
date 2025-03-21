@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2']
-        nextcloud-versions: ['stable25']
+        php-versions: ["7.4", "8.0", "8.1", "8.2"]
+        nextcloud-versions: ["stable25"]
         include:
           - php-versions: 8.2
             nextcloud-versions: stable31
@@ -34,38 +34,38 @@ jobs:
             nextcloud-versions: stable22
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
-    - name: Set up php${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
-        coverage: xdebug
-    - name: Checkout Nextcloud
-      run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-    - name: Patch version check for nightly PHP
-      if: ${{ matrix.php-versions == '8.2' }}
-      run: echo "<?php" > nextcloud/lib/versioncheck.php
-    - name: Install Nextcloud
-      run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
-    - name: Checkout qownnotesapi
-      uses: actions/checkout@v3
-      with:
-        path: nextcloud/apps/qownnotesapi
-    - name: Test app
-      run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ background:cron
-#    - name: Install dependencies
-#      working-directory: nextcloud/apps/qownnotesapi
-#      run: composer install
-#    - name: PHPUnit tests
-#      uses: php-actions/phpunit@v3
-#      with:
-#        configuration: phpunit.coverage.xml
-    - name: Run tests
-      working-directory: nextcloud/apps/qownnotesapi
-      run: composer global require phpunit/phpunit && phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
-      if: ${{ matrix.php-versions == '8.0' }}
-      env:
-        XDEBUG_MODE: coverage
+      - name: Set up php${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
+          coverage: xdebug
+      - name: Checkout Nextcloud
+        run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+      - name: Patch version check for nightly PHP
+        if: ${{ matrix.php-versions == '8.2' }}
+        run: echo "<?php" > nextcloud/lib/versioncheck.php
+      - name: Install Nextcloud
+        run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+      - name: Checkout qownnotesapi
+        uses: actions/checkout@v3
+        with:
+          path: nextcloud/apps/qownnotesapi
+      - name: Test app
+        run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ background:cron
+      #    - name: Install dependencies
+      #      working-directory: nextcloud/apps/qownnotesapi
+      #      run: composer install
+      #    - name: PHPUnit tests
+      #      uses: php-actions/phpunit@v3
+      #      with:
+      #        configuration: phpunit.coverage.xml
+      - name: Run tests
+        working-directory: nextcloud/apps/qownnotesapi
+        run: composer global require phpunit/phpunit && phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml
+        if: ${{ matrix.php-versions == '8.0' }}
+        env:
+          XDEBUG_MODE: coverage
 #    - name: Report coverage
 #      uses: codecov/codecov-action@v3.1.0
 #      if: ${{ always() && matrix.php-versions == '8.0' }}

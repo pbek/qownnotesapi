@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace OCA\QOwnNotesAPI\AppInfo;
 
 return ['routes' => [
-    // note api
-    ['name' => 'note_api#get_all_versions', 'url' => '/api/v1/note/versions', 'verb' => 'GET'],
-    ['name' => 'note_api#get_app_info', 'url' => '/api/v1/note/app_info', 'verb' => 'GET'],
-    ['name' => 'note_api#get_trashed_notes', 'url' => '/api/v1/note/trashed', 'verb' => 'GET'],
-    ['name' => 'note_api#restore_trashed_note', 'url' => '/api/v1/note/restore_trashed', 'verb' => 'GET'],
+	// note api
+	['name' => 'note_api#get_all_versions', 'url' => '/api/v1/note/versions', 'verb' => 'GET'],
+	['name' => 'note_api#get_app_info', 'url' => '/api/v1/note/app_info', 'verb' => 'GET'],
+	['name' => 'note_api#get_trashed_notes', 'url' => '/api/v1/note/trashed', 'verb' => 'GET'],
+	['name' => 'note_api#restore_trashed_note', 'url' => '/api/v1/note/restore_trashed', 'verb' => 'GET'],
 ]];

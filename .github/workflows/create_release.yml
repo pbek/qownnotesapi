@@ -1,11 +1,11 @@
-name: '🗃️ Create empty release'
+name: "🗃️ Create empty release"
 
 on:
   push:
     branches:
       - release
     tags-ignore:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 env:
@@ -13,9 +13,9 @@ env:
 
 jobs:
   create_release:
-    name: '🗃️️ Prepare release'
+    name: "🗃️️ Prepare release"
     permissions:
-      contents: write  # for actions/create-release to create a release
+      contents: write # for actions/create-release to create a release
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -51,7 +51,6 @@ jobs:
           body: ${{ env.RELEASE_TEXT }}
           draft: true
           prerelease: false
-
 #  build_and_publish:
 #    runs-on: ubuntu-latest
 #    steps:

@@ -10,6 +10,10 @@ default:
 transferDir := `if [ -d "$HOME/NextcloudPrivate/Transfer" ]; then echo "$HOME/NextcloudPrivate/Transfer"; else echo "$HOME/Nextcloud/Transfer"; fi`
 projectName := 'qownnotesapi'
 
+# Aliases
+
+alias fmt := format
+
 # Open a terminal with the project session
 [group('dev')]
 term-run:
@@ -55,3 +59,15 @@ just-format:
         echo "Formatting $file"
         just --fmt --unstable -f "$file"
     done
+
+# Format all files
+[group('linter')]
+format args='':
+    nix-shell -p treefmt nodePackages.prettier shfmt nixfmt-rfc-style statix taplo php83Packages.php-cs-fixer --run "treefmt {{ args }}"
+
+# Add git commit hashes to the .git-blame-ignore-revs file
+[group('linter')]
+add-git-blame-ignore-revs:
+    git log --pretty=format:"%H" --grep="^lint" >> .git-blame-ignore-revs
+    sort .git-blame-ignore-revs | uniq > .git-blame-ignore-revs.tmp
+    mv .git-blame-ignore-revs.tmp .git-blame-ignore-revs

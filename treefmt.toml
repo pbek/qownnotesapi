@@ -1,0 +1,42 @@
+# https://github.com/numtide/treefmt
+# https://github.com/numtide/treefmt-nix
+
+on-unmatched = "info"
+excludes = ["config/secrets/**/*"]
+
+[formatter.prettier]
+command = "prettier"
+options = ["--write"]
+includes = ["*.md", "*.yaml", "*.yml", "*.json"]
+
+[formatter.just]
+command = "just"
+options = ["--fmt", "--unstable", "-f"]
+includes = ["justfile"]
+
+[formatter.taplo]
+command = "taplo"
+includes = ["*.toml"]
+options = ["format"]
+
+[formatter.nixfmt-rfc-style]
+command = "nixfmt"
+includes = ["*.nix"]
+
+# Statix doesn't support formatting single files, see https://github.com/oppiliappan/statix/issues/69
+# Workaround: https://github.com/numtide/treefmt/issues/241#issuecomment-1614563462
+[formatter.statix]
+command = "bash"
+options = ["-euc", "for file in \"$@\"; do statix fix \"$file\"; done"]
+includes = ["*.nix"]
+
+[formatter.php-cs-fixer]
+command = "php-cs-fixer"
+excludes = ["config/bundles.php"]
+includes = ["*.php"]
+options = ["fix", "--config", "./.php-cs-fixer.dist.php"]
+
+[formatter.shfmt]
+command = "shfmt"
+includes = ["*.sh", "*.bash", "*.envrc", "*.envrc.*"]
+options = ["-s", "-w", "-i", "4"]

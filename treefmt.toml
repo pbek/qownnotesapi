@@ -2,7 +2,7 @@
 # https://github.com/numtide/treefmt-nix
 
 on-unmatched = "info"
-excludes = ["config/secrets/**/*"]
+excludes = ["config/secrets/**/*", "vendor/**"]
 
 [formatter.prettier]
 command = "prettier"

@@ -8,6 +8,7 @@ excludes = ["config/secrets/**/*", "vendor/**"]
 command = "prettier"
 options = ["--write"]
 includes = ["*.md", "*.yaml", "*.yml", "*.json"]
+excludes = ["appinfo/signature.json"]
 
 [formatter.just]
 command = "just"

@@ -5,6 +5,7 @@
 #FROM nextcloud:29-apache
 #FROM ghcr.io/pbek/nextcloud-docker-pre-apache:latest
 #FROM nextcloud:30-apache
+#FROM nextcloud:31-apache
 FROM ghcr.io/digital-blueprint/nextcloud-docker-pre-apache:latest
 
 COPY entrypoint.sh /

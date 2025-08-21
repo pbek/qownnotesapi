@@ -23,6 +23,10 @@ all: check-code test sign-app
 build:
     {{ dockerComposeCommand }} build
 
+# Build the docker image without cache
+build-force:
+    {{ dockerComposeCommand }} build --no-cache
+
 # Fetch the database from the container
 fetch-db:
     {{ dockerComposeCommand }} run --rm app su -c "cp data/mydb.db apps/qownnotesapi" www-data

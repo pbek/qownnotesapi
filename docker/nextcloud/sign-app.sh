@@ -16,6 +16,9 @@ rm -rf ${APP_DEST} &&
         --exclude *.db* --exclude docker --exclude *.phar --exclude *.gz --exclude .idea \
         --exclude=shell.nix --exclude=.envrc --exclude .direnv --exclude .codeclimate.yml \
         --exclude .editorconfig --exclude .php_cs* --exclude .php-cs* --exclude .travis.yml \
+        --exclude devenv.* --exclude treefmt.toml --exclude term.kdl --exclude phpunit.* \
+        --exclude psalm.* --exclude phpstan.* --exclude justfile --exclude .devenv \
+        --exclude .devenv.* --exclude .pre-commit-config.* \
         ${APP_SOURCE}/ ${APP_DEST} &&
     su -m -c "./occ integrity:sign-app \
   --privateKey=${CERT_PATH}/${APP_NAME}.key \

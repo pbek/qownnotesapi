@@ -43,7 +43,7 @@ git-apply-patch:
 # Run the GitHub Actions test workflow locally with act
 [group('dev')]
 github-run-test:
-    act -W .github/workflows/test.yml
+    nix-shell -p act --run "act -W .github/workflows/test.yml"
 
 # Open the project in the browser
 [group('dev')]
@@ -63,7 +63,12 @@ just-format:
 # Format all files
 [group('linter')]
 format args='':
-    nix-shell -p treefmt nodePackages.prettier shfmt nixfmt-rfc-style statix taplo php83Packages.php-cs-fixer --run "treefmt {{ args }}"
+    treefmt {{ args }}
+
+# Format all files using pre-commit
+[group('linter')]
+format-all args='':
+    pre-commit run --all-files {{ args }}
 
 # Add git commit hashes to the .git-blame-ignore-revs file
 [group('linter')]

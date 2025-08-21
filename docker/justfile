@@ -45,7 +45,7 @@ bash-root:
 
 # Run a sidecar container with more debugging tools
 slim-shell:
-    slim debug --target {{ containerName }}
+    nix-shell -p docker-slim --run "slim debug --target {{ containerName }}"
 
 # Turn off maintenance mode
 maintenance-mode-off:

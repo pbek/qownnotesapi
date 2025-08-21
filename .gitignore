@@ -7,3 +7,13 @@ docker/owncloud/certificates/*
 *.db*
 *.cache
 vendor
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml

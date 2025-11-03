@@ -1,4 +1,13 @@
 # yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
 inputs:
   nixpkgs:
-    url: github:cachix/devenv-nixpkgs/rolling
+    # There were PHP build issues with cachix rolling
+    # url: github:cachix/devenv-nixpkgs/rolling
+    url: github:NixOS/nixpkgs/nixos-unstable
+  shared:
+    url: github:pbek/nix-shared
+    flake: false
+
+imports:
+  - shared/common
+  - shared/php

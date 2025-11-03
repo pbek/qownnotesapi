@@ -1,4 +1,4 @@
-name: Test
+name: "🧪 Test"
 
 on:
   pull_request:
@@ -20,31 +20,31 @@ jobs:
             nextcloud-version: "stable29"
           - php-version: "8.4"
             nextcloud-version: "stable30"
-    name: Nextcloud ${{ matrix.nextcloud-version }} php${{ matrix.php-version }} unit tests
+    name: "🧪 Nextcloud ${{ matrix.nextcloud-version }} php${{ matrix.php-version }} unit tests"
     steps:
-      - name: Set up php${{ matrix.php-version }}
+      - name: "🧰 Set up php${{ matrix.php-version }}"
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
           coverage: xdebug
-      - name: Checkout Nextcloud
+      - name: "📥 Checkout Nextcloud"
         run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-version }} nextcloud
       #      - name: Patch version check for nightly PHP
       #        if: ${{ matrix.php-version == '8.2' }}
       #        run: echo "<?php" > nextcloud/lib/versioncheck.php
-      - name: Install Nextcloud
+      - name: "⚙️ Install Nextcloud"
         run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
-      - name: Checkout qownnotesapi
+      - name: "📦 Checkout qownnotesapi"
         uses: actions/checkout@v3
         with:
           path: nextcloud/apps/qownnotesapi
-      - name: Test app
+      - name: "✅ Test app"
         run: php -f nextcloud/occ app:enable qownnotesapi && php -f nextcloud/occ background:cron
-      - name: Install dependencies
+      - name: "📦 Install dependencies"
         working-directory: nextcloud/apps/qownnotesapi
         run: composer install
-      - name: Run tests
+      - name: "🧪 Run tests"
         working-directory: nextcloud/apps/qownnotesapi
         run: composer test-coverage
         if: ${{ matrix.php-version == '8.3' }}

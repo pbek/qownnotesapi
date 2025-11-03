@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ["8.1", "8.2", "8.3", "8.4"]
-        nextcloud-versions: ["stable32", "stable31", "stable30", "stable29"]
-    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
+        php-version: ["8.1", "8.2", "8.3", "8.4"]
+        nextcloud-version: ["stable32", "stable31", "stable30", "stable29"]
+    name: Nextcloud ${{ matrix.nextcloud-version }} php${{ matrix.php-version }} unit tests
     steps:
-      - name: Set up php${{ matrix.php-versions }}
+      - name: Set up php${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
           coverage: xdebug
       - name: Checkout Nextcloud
-        run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+        run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-version }} nextcloud
       #      - name: Patch version check for nightly PHP
-      #        if: ${{ matrix.php-versions == '8.2' }}
+      #        if: ${{ matrix.php-version == '8.2' }}
       #        run: echo "<?php" > nextcloud/lib/versioncheck.php
       - name: Install Nextcloud
         run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
@@ -40,12 +40,12 @@ jobs:
       - name: Run tests
         working-directory: nextcloud/apps/qownnotesapi
         run: composer test-coverage
-        if: ${{ matrix.php-versions == '8.3' }}
+        if: ${{ matrix.php-version == '8.3' }}
         env:
           XDEBUG_MODE: coverage
 #    - name: Report coverage
 #      uses: codecov/codecov-action@v3.1.0
-#      if: ${{ always() && matrix.php-versions == '8.0' }}
+#      if: ${{ always() && matrix.php-version == '8.0' }}
 #      with:
 #        file: ./nextcloud/apps/qownnotesapi/tests/clover.unit.xml
 #        flags: unittests

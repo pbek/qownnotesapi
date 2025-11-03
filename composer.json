@@ -3,7 +3,8 @@
     "vimeo/psalm": "^4.29",
     "friendsofphp/php-cs-fixer": "^3.12",
     "phpstan/phpstan": "^1.8",
-    "nextcloud/coding-standard": "^1.1"
+    "nextcloud/coding-standard": "^1.1",
+    "phpunit/phpunit": "^9.6"
   },
   "scripts": {
     "phpstan": [
@@ -22,6 +23,13 @@
     ],
     "cs": [
       "@php vendor/bin/php-cs-fixer --ansi fix --dry-run --diff"
+    ],
+    "test": [
+      "@php vendor/bin/phpunit -c phpunit.coverage.xml"
+    ],
+    "test-coverage": [
+      "@putenv XDEBUG_MODE=coverage",
+      "@php vendor/bin/phpunit -c phpunit.coverage.xml --coverage-clover build/logs/clover.xml"
     ]
   }
 }

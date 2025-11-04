@@ -21,24 +21,46 @@ use OC_User;
 use OCA\Files_Trashbin\Helper;
 use OCA\Files_Trashbin\Trashbin;
 use OCA\Files_Versions\Storage;
+use OCP\App\IAppManager;
 use OCP\AppFramework\ApiController;
+use OCP\AppFramework\Http\Attribute\CORS;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
+use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\Lock\LockedException;
 
 class NoteApiController extends ApiController {
 	protected $user;
+	private IUserManager $userManager;
+	private IAppManager $appManager;
+	private IConfig $config;
+	private IAppConfig $appConfig;
 
 	/**
 	 * @param string $appName
 	 * @param string $userId
 	 */
-	public function __construct($appName,
+	public function __construct(
+		$appName,
 		$userId,
-		IRequest $request) {
+		IRequest $request,
+		IUserManager $userManager,
+		IAppManager $appManager,
+		IConfig $config,
+		IAppConfig $appConfig
+	) {
 		// For some reason $userId is null on ownCloud 10.3+ anymore
 		// https://github.com/pbek/QOwnNotes/issues/1725
 		$this->user = $userId ? $userId : $_SERVER['PHP_AUTH_USER'];
+		$this->userManager = $userManager;
+		$this->appManager = $appManager;
+		$this->config = $config;
+		$this->appConfig = $appConfig;
 		parent::__construct($appName, $request);
 	}
 
@@ -47,8 +69,8 @@ class NoteApiController extends ApiController {
 	 *
 	 * @return array
 	 *
-	 * @throws \OCP\Lock\LockedException
-	 * @throws \OC\User\NoUserException
+	 * @throws LockedException
+	 * @throws NoUserException
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -94,7 +116,7 @@ class NoteApiController extends ApiController {
 					];
 				}
 			}
-		} catch (\OCP\Files\NotFoundException $exception) {
+		} catch (NotFoundException $exception) {
 			// Requested file was not found, silently fail (for now)
 			$errorMessages[] = 'Requested file was not found!';
 		} catch (Exception $exception) {
@@ -117,13 +139,12 @@ class NoteApiController extends ApiController {
 	 * @return array
 	 * @throws NoUserException
 	 */
-	protected static function getUidAndFilename($filename) {
+	protected function getUidAndFilename($filename) {
 		$uid = Filesystem::getOwner($filename);
-		$userManager = \OC::$server->get(IUserManager::class);
-		// if the user with the UID doesn't exists, e.g. because the UID points
+		// if the user with the UID doesn't exist, e.g. because the UID points
 		// to a remote user with a federated cloud ID we use the current logged-in
 		// user. We need a valid local user to create the versions
-		if (!$userManager->userExists($uid)) {
+		if (!$this->userManager->userExists($uid)) {
 			$uid = OC_User::getUser();
 		}
 		Filesystem::initMountPoints($uid);
@@ -153,16 +174,15 @@ class NoteApiController extends ApiController {
 	#[NoCSRFRequired]
 	#[CORS]
 	public function getAppInfo() {
-		$appManager = \OC::$server->getAppManager();
-		$versionsAppEnabled = $appManager->isEnabledForUser('files_versions');
-		$trashAppEnabled = $appManager->isEnabledForUser('files_trashbin');
+		$versionsAppEnabled = $this->appManager->isEnabledForUser('files_versions');
+		$trashAppEnabled = $this->appManager->isEnabledForUser('files_trashbin');
 		$notesPathExists = false;
 		$notesPath = $this->request->getParam('notes_path', '');
 
 		// check if notes path exists
 		if ($notesPath !== '') {
 			$notesPath = '/files'.(string) $notesPath;
-			$view = new \OC\Files\View('/'.$this->user);
+			$view = new View('/'.$this->user);
 			$notesPathExists = $view->is_dir($notesPath);
 		}
 
@@ -171,8 +191,8 @@ class NoteApiController extends ApiController {
 			'versions_app' => $versionsAppEnabled,
 			'trash_app' => $trashAppEnabled,
 			'versioning' => true,
-			'app_version' => \OC::$server->getConfig()->getAppValue('qownnotesapi', 'installed_version'),
-			'server_version' => \OC::$server->getSystemConfig()->getValue('version'),
+			'app_version' => $this->appConfig->getValueString('qownnotesapi', 'installed_version', ''),
+			'server_version' => $this->config->getSystemValue('version'),
 			'notes_path_exists' => $notesPathExists,
 		];
 	}
@@ -182,7 +202,7 @@ class NoteApiController extends ApiController {
 	 *
 	 * @return string|array
 	 *
-	 * @throws \OCP\Lock\LockedException
+	 * @throws LockedException
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -198,18 +218,18 @@ class NoteApiController extends ApiController {
 		$noteFileExtensions = array_merge(['md', 'txt'], $customFileExtensions);
 
 		// remove leading "/"
-		if (substr($dir, 0, 1) === '/') {
+		if (str_starts_with($dir, '/')) {
 			$dir = substr($dir, 1);
 		}
 
 		// remove trailing "/"
-		if (substr($dir, -1) === '/') {
+		if (str_ends_with($dir, '/')) {
 			$dir = substr($dir, 0, -1);
 		}
 
 		$sortAttribute = $this->request->getParam('sort', 'mtime');
 		$sortDirectionParam = $this->request->getParam('sortdirection', '');
-		$sortDirection = ($sortDirectionParam !== '') ? ($sortDirectionParam === 'desc') : true;
+		$sortDirection = !($sortDirectionParam !== '') || $sortDirectionParam === 'desc';
 		$filesInfo = [];
 
 		// generate the file list
@@ -226,15 +246,17 @@ class NoteApiController extends ApiController {
 			$extension = $pathParts['extension'] ?? '';
 
 			// if $fileInfo["extraData"] is not set we will have to show the note files from all folders in QOwnNotes
-			$isInDir = isset($fileInfo['extraData']) ?
-				(strpos($fileInfo['extraData'], $dir.'/'.$fileInfo['name']) === 0) : true;
+			$isInDir = !isset($fileInfo['extraData']) || str_starts_with(
+				$fileInfo['extraData'],
+				$dir.'/'.$fileInfo['name']
+			);
 			$isNoteFile = in_array($extension, $noteFileExtensions, true);
 
 			if ($isInDir && $isNoteFile) {
 				$timestamp = (int) ($fileInfo['mtime'] / 1000);
 				$fileName = '/files_trashbin/files/'.$fileInfo['name'].".d$timestamp";
 
-				$view = new \OC\Files\View('/'.$this->user);
+				$view = new View('/'.$this->user);
 				$data = '';
 
 				// load the file data
@@ -272,7 +294,7 @@ class NoteApiController extends ApiController {
 	 *
 	 * @return string|array
 	 *
-	 * @throws \OCP\Files\NotPermittedException
+	 * @throws NotPermittedException
 	 *
 	 * @see owncloud/core/apps/files_trashbin/ajax/undelete.php
 	 */

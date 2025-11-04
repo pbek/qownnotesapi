@@ -30,6 +30,6 @@ The only purpose of this App is to provide API access to your Nextcloud/ownCloud
     <!-- dependencies -->
     <dependencies>
         <owncloud min-version="8.2" max-version="10" />
-        <nextcloud min-version="22" max-version="32" />
+        <nextcloud min-version="29" max-version="32" />
     </dependencies>
 </info>

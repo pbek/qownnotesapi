@@ -3,6 +3,8 @@
 ## Next
 
 - Migrated to from PHP7 to PHP8 annotations (for [#53](https://github.com/pbek/qownnotesapi/issues/53))
+- Migrated the use of the Nextcloud API to Nextcloud 29+ standards
+  - Increased min-version to Nextcloud 29
 
 ## 25.8.0
 

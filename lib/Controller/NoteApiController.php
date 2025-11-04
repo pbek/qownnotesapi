@@ -45,17 +45,14 @@ class NoteApiController extends ApiController {
 	/**
 	 * Gets all versions of a note.
 	 *
-	 * @NoAdminRequired
-	 *
-	 * @NoCSRFRequired
-	 *
-	 * @CORS
-	 *
 	 * @return array
 	 *
 	 * @throws \OCP\Lock\LockedException
 	 * @throws \OC\User\NoUserException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function getAllVersions() {
 		$source = $this->request->getParam('file_name', '');
 		$errorMessages = [];
@@ -148,16 +145,13 @@ class NoteApiController extends ApiController {
 	/**
 	 * Returns information about the ownCloud server.
 	 *
-	 * @NoAdminRequired
-	 *
-	 * @NoCSRFRequired
-	 *
-	 * @CORS
-	 *
 	 * @return string|array
 	 *
 	 * @throws Exception
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function getAppInfo() {
 		$appManager = \OC::$server->getAppManager();
 		$versionsAppEnabled = $appManager->isEnabledForUser('files_versions');
@@ -186,16 +180,13 @@ class NoteApiController extends ApiController {
 	/**
 	 * Gets information about trashed notes.
 	 *
-	 * @NoAdminRequired
-	 *
-	 * @NoCSRFRequired
-	 *
-	 * @CORS
-	 *
 	 * @return string|array
 	 *
 	 * @throws \OCP\Lock\LockedException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function getTrashedNotes() {
 		$dir = $this->request->getParam('dir', '');
 		$customFileExtensions = $this->request->getParam('extensions', []);
@@ -284,13 +275,10 @@ class NoteApiController extends ApiController {
 	 * @throws \OCP\Files\NotPermittedException
 	 *
 	 * @see owncloud/core/apps/files_trashbin/ajax/undelete.php
-	 *
-	 * @NoAdminRequired
-	 *
-	 * @NoCSRFRequired
-	 *
-	 * @CORS
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function restoreTrashedNote() {
 		$filename = $this->request->getParam('file_name');
 		$timestamp = (int) $this->request->getParam('timestamp');

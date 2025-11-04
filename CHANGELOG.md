@@ -1,5 +1,9 @@
 # QOwnNotesAPI Change Log
 
+## Next
+
+- Migrated to from PHP7 to PHP8 annotations (for [#53](https://github.com/pbek/qownnotesapi/issues/53))
+
 ## 25.8.0
 
 - Enabled and tested app for Nextcloud 32 (for [#52](https://github.com/pbek/qownnotesapi/issues/52))

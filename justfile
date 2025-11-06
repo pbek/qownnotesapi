@@ -47,3 +47,27 @@ github-run-test:
 [group('dev')]
 open-browser:
     xdg-open http://localhost:8081
+
+# Run tests for multiple versions of Nextcloud
+[group('test')]
+vm-test args='':
+    nix build -L .#nixosTests.nextcloud-qownnotesapi {{ args }}
+
+# Interactive NixOS test driver session for the combined Nextcloud versions.
+# Tries driverInteractive first (non-executing build), then falls back to driver (also non-executing) if needed.
+# Usage examples:
+#   just vm-test-interactive
+#   just vm-test-interactive args="--impure"        # allow env vars: FORCE_REBUILD_NONCE=...
+
+# Interactive NixOS test driver session for the combined Nextcloud versions test
+[group('test')]
+vm-test-interactive args='':
+    if nix build -L .#nixosTests.nextcloud-qownnotesapi.driverInteractive {{ args }}; then \
+        echo "Built driverInteractive attribute"; \
+    elif nix build -L .#nixosTests.nextcloud-qownnotesapi.driver {{ args }}; then \
+        echo "driverInteractive missing; using driver attribute"; \
+    else \
+        echo "Failed to build either driverInteractive or driver attribute"; \
+        exit 1; \
+    fi
+    ./result/bin/nixos-test-driver

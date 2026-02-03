@@ -1,5 +1,9 @@
 # QOwnNotesAPI Change Log
 
+## 26.2.1
+
+- Fix app to run with PHP 8.2 and 8.3, instead of only PHP 8.4 (for [#56](https://github.com/pbek/qownnotesapi/issues/56))
+
 ## 26.2.0
 
 - Enabled and tested app for Nextcloud 33 (for [#56](https://github.com/pbek/qownnotesapi/issues/56))

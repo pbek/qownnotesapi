@@ -1,7 +1,8 @@
 # QOwnNotesAPI Change Log
 
-## Next
+## 26.2.0
 
+- Enabled and tested app for Nextcloud 33 (for [#56](https://github.com/pbek/qownnotesapi/issues/56))
 - Migrated to from PHP7 to PHP8 annotations (for [#53](https://github.com/pbek/qownnotesapi/issues/53))
 - Migrated the use of the Nextcloud API to Nextcloud 29+ standards
   - Increased min-version to Nextcloud 29

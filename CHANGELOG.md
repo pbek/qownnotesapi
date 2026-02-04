@@ -1,6 +1,6 @@
 # QOwnNotesAPI Change Log
 
-## 26.2.1
+## 26.2.2
 
 - Fix installation error message `Out-of-path file extraction` (for [#57](https://github.com/pbek/qownnotesapi/issues/57))
 

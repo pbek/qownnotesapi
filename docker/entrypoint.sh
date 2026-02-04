@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 chown www-data:root /var/www/deploy
@@ -31,8 +31,10 @@ file_env() {
   local var="$1"
   local fileVar="${var}_FILE"
   local def="${2:-}"
-  local varValue=$(env | grep -E "^${var}=" | sed -E -e "s/^${var}=//")
-  local fileVarValue=$(env | grep -E "^${fileVar}=" | sed -E -e "s/^${fileVar}=//")
+  local varValue
+  local fileVarValue
+  varValue=$(env | grep -E "^${var}=" | sed -E -e "s/^${var}=//")
+  fileVarValue=$(env | grep -E "^${fileVar}=" | sed -E -e "s/^${fileVar}=//")
   if [ -n "${varValue}" ] && [ -n "${fileVarValue}" ]; then
     echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
     exit 1
@@ -99,14 +101,14 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
     else
       rsync_options="-rlD"
     fi
-    rsync $rsync_options --delete --exclude-from=/upgrade.exclude /usr/src/nextcloud/ /var/www/html/
+    rsync "$rsync_options" --delete --exclude-from=/upgrade.exclude /usr/src/nextcloud/ /var/www/html/
 
     for dir in config data custom_apps themes; do
       if [ ! -d "/var/www/html/$dir" ] || directory_empty "/var/www/html/$dir"; then
-        rsync $rsync_options --include "/$dir/" --exclude '/*' /usr/src/nextcloud/ /var/www/html/
+        rsync "$rsync_options" --include "/$dir/" --exclude '/*' /usr/src/nextcloud/ /var/www/html/
       fi
     done
-    rsync $rsync_options --include '/version.php' --exclude '/*' /usr/src/nextcloud/ /var/www/html/
+    rsync "$rsync_options" --include '/version.php' --exclude '/*' /usr/src/nextcloud/ /var/www/html/
     echo "Initializing finished"
 
     #install

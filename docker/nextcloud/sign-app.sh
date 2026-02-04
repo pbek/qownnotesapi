@@ -15,8 +15,8 @@ rm -rf ${APP_DEST} &&
   echo "📂 Deployment directory prepared." &&
   rsync -a --exclude .git* --exclude .gitlab-ci* --exclude .github --exclude screenshot* \
     --exclude docs --exclude tests --exclude vendor --exclude package.* --exclude composer.json --exclude composer.lock \
-    --exclude Makefile --exclude *.db* --exclude docker --exclude *.phar \
-    --exclude *.gz --exclude .idea --exclude .renovaterc.json --exclude .php-cs* \
+    --exclude Makefile --exclude '*.db*' --exclude docker --exclude '*.phar' \
+    --exclude '*.gz' --exclude .idea --exclude .renovaterc.json --exclude '.php-cs*' \
     --exclude phpstan.* --exclude phpunit.* --exclude psalm.xml --exclude shell.nix \
     --exclude .envrc --exclude .direnv --exclude term.kdl --exclude .phpunit.result.cache \
     --exclude justfile --exclude treefmt.toml --exclude .devenv --exclude flake.* \
@@ -37,12 +37,12 @@ rm -rf ${APP_DEST} &&
   --certificate=${CERT_PATH}/${APP_NAME}.crt --path=${APP_DEST}" www-data &&
   echo "🔐 App signed successfully." &&
   cp ${APP_DEST}/appinfo/signature.json ${APP_SOURCE}/appinfo &&
-  echo "\n🔍 Reviewing files to be included in the archive:\n" &&
+  printf "\n🔍 Reviewing files to be included in the archive:\n\n" &&
   find ${APP_DEST} -type f | sort &&
-  echo "\n⏸️ Press Enter to continue with archiving.\n" &&
-  read line &&
+  printf "\n⏸️ Press Enter to continue with archiving.\n\n" &&
+  read -r _ &&
   tar czf ${DEPLOYMENT_FILE} -C ${APP_DEST}/.. ${APP_NAME} &&
   echo "📦 Archive created." &&
-  echo "\n🔐 Signature for your app archive:\n" &&
+  printf "\n🔐 Signature for your app archive:\n\n" &&
   openssl dgst -sha512 -sign ${CERT_PATH}/${APP_NAME}.key ${DEPLOYMENT_FILE} | openssl base64 &&
   echo

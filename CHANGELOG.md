@@ -1,5 +1,10 @@
 # QOwnNotesAPI Change Log
 
+## 26.5.0
+
+- Enabled and tested app for Nextcloud 34 (for [#58](https://github.com/pbek/qownnotesapi/issues/58))
+- Updated dependencies
+
 ## 26.2.2
 
 - Fix installation error message `Out-of-path file extraction` (for [#57](https://github.com/pbek/qownnotesapi/issues/57))

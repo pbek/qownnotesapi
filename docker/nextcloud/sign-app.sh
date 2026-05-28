@@ -39,8 +39,10 @@ rm -rf ${APP_DEST} &&
   cp ${APP_DEST}/appinfo/signature.json ${APP_SOURCE}/appinfo &&
   printf "\n🔍 Reviewing files to be included in the archive:\n\n" &&
   find ${APP_DEST} -type f | sort &&
-  printf "\n⏸️ Press Enter to continue with archiving.\n\n" &&
-  read -r _ &&
+  if [ -t 0 ]; then
+    printf "\n⏸️ Press Enter to continue with archiving.\n\n" &&
+      read -r _
+  fi &&
   tar czf ${DEPLOYMENT_FILE} -C ${APP_DEST}/.. ${APP_NAME} &&
   echo "📦 Archive created." &&
   printf "\n🔐 Signature for your app archive:\n\n" &&

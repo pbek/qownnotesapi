@@ -16,8 +16,8 @@ volumeName := "nextcloud-qownnotesapi_nextcloud"
 
 alias remove-volumes := reset
 
-# Check the code, run tests and sign the app
-all: check-code test sign-app
+# Run tests and sign the app
+all: test sign-app
 
 # Build the docker image
 build:
@@ -51,9 +51,9 @@ slim-shell:
 maintenance-mode-off:
     {{ dockerComposeCommand }} run --rm app su -c "./occ maintenance:mode --off" www-data
 
-# Run the app:check-code command
+# Run the app:check-code command if the Nextcloud version still provides it
 check-code:
-    {{ dockerComposeCommand }} run --rm app su -c "./occ app:check-code qownnotesapi" www-data
+    {{ dockerComposeCommand }} run --rm app su -c "if ./occ list --raw | grep -qx app:check-code; then ./occ app:check-code qownnotesapi; else echo 'app:check-code is not available in this Nextcloud version; skipping.'; fi" www-data
 
 # Run the app signing command for Nextcloud
 sign-app:
@@ -65,7 +65,7 @@ sign-app-owncloud:
 
 # Run the tests
 test:
-    {{ dockerComposeCommand }} run --rm app su -c "cd apps/qownnotesapi && just test" www-data
+    {{ dockerComposeCommand }} run --rm app su -c "cd apps/qownnotesapi && php vendor/bin/phpunit -c phpunit.coverage.xml" www-data
 
 # Show Nextcloud logs
 show-log:

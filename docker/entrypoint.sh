@@ -97,18 +97,18 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
       run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" >/tmp/list_before
     fi
     if [ "$(id -u)" = 0 ]; then
-      rsync_options="-rlDog --chown www-data:root"
+      rsync_options=(-rlDog --chown www-data:root)
     else
-      rsync_options="-rlD"
+      rsync_options=(-rlD)
     fi
-    rsync "$rsync_options" --delete --exclude-from=/upgrade.exclude /usr/src/nextcloud/ /var/www/html/
+    rsync "${rsync_options[@]}" --delete --exclude-from=/upgrade.exclude /usr/src/nextcloud/ /var/www/html/
 
     for dir in config data custom_apps themes; do
       if [ ! -d "/var/www/html/$dir" ] || directory_empty "/var/www/html/$dir"; then
-        rsync "$rsync_options" --include "/$dir/" --exclude '/*' /usr/src/nextcloud/ /var/www/html/
+        rsync "${rsync_options[@]}" --include "/$dir/" --exclude '/*' /usr/src/nextcloud/ /var/www/html/
       fi
     done
-    rsync "$rsync_options" --include '/version.php' --exclude '/*' /usr/src/nextcloud/ /var/www/html/
+    rsync "${rsync_options[@]}" --include '/version.php' --exclude '/*' /usr/src/nextcloud/ /var/www/html/
     echo "Initializing finished"
 
     #install

@@ -1,5 +1,9 @@
 # QOwnNotesAPI Change Log
 
+## 26.8.0
+
+- Updated dependencies
+
 ## 26.5.0
 
 - Enabled and tested app for Nextcloud 34 (for [#58](https://github.com/pbek/qownnotesapi/issues/58))

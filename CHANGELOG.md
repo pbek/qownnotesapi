@@ -2,6 +2,7 @@
 
 ## 26.8.0
 
+- Enabled, fixed and tested app for Nextcloud 35 (for [#59](https://github.com/pbek/qownnotesapi/issues/59))
 - Updated dependencies
 - Dropped support for unsupported Nextcloud versions older than 32
 

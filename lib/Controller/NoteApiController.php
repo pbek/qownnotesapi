@@ -18,6 +18,7 @@ use OC\Files\Filesystem;
 use OC\Files\View;
 use OC\User\NoUserException;
 use OC_User;
+use OCA\Files\Helper as FilesHelper;
 use OCA\Files_Trashbin\Helper;
 use OCA\Files_Trashbin\Trashbin;
 use OCA\Files_Versions\Storage;
@@ -26,6 +27,7 @@ use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\CORS;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\Constants;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IAppConfig;
@@ -235,7 +237,14 @@ class NoteApiController extends ApiController {
 		// generate the file list
 		try {
 			$files = Helper::getTrashFiles('/', $this->user, $sortAttribute, $sortDirection);
-			$filesInfo = Helper::formatFileInfos($files);
+			foreach ($files as $file) {
+				// Files_Trashbin::formatFileInfos() was removed in Nextcloud 35.
+				$fileInfo = FilesHelper::formatFileInfo($file);
+				$fileInfo['id'] = $file->getId();
+				$fileInfo['etag'] = $fileInfo['mtime'];
+				$fileInfo['permissions'] = Constants::PERMISSION_READ;
+				$filesInfo[] = $fileInfo;
+			}
 		} catch (Exception $e) {
 		}
 

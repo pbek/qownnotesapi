@@ -104,10 +104,26 @@ pkgs26_05.testers.nixosTest {
   nodes = node32 // node33 // node34;
   interactive.sshBackdoor.enable = true; # provides ssh-config & vsock access (needs host vsock support)
   testScript = ''
+    import json
+    import shlex
+    import time
+    from urllib.parse import urlencode
+
     print("Has32=${toString has32} Has33=${toString has33} Has34=${toString has34}")
     start_all()
 
-    # Helper to test a Nextcloud node consistently
+    def dav_request(node, method, path, data=None):
+        command = f"curl -fsS -u admin:adminpass -X {method}"
+        if data is not None:
+            command += f" --data-binary {shlex.quote(data)}"
+        command += " " + shlex.quote(f"http://localhost/remote.php/dav/files/admin/{path}")
+        return node.succeed(command)
+
+    def api_get(node, endpoint, params=None):
+        query = "?" + urlencode(params or {}, doseq=True)
+        url = f"http://localhost/index.php/apps/qownnotesapi/api/v1/note/{endpoint}{query}"
+        return json.loads(node.succeed("curl -fsS -u admin:adminpass " + shlex.quote(url)))
+
     def test_version(node, label, pkg_version):
         print(f"Testing Nextcloud {label} ({pkg_version})")
         node.wait_for_unit("phpfpm-nextcloud.service")
@@ -116,10 +132,68 @@ pkgs26_05.testers.nixosTest {
         node.succeed("sudo -u nextcloud nextcloud-occ app:list | grep -i qownnotesapi || (echo 'App missing ({label})'; sudo -u nextcloud nextcloud-occ app:list; exit 1)")
         assert "200" in node.succeed("curl -s -o /dev/null -w '%{http_code}' http://localhost/login"), "Login page needs to show up!"
         node.succeed("sudo -u nextcloud nextcloud-occ status | grep -i 'version:'")
-        # Test qownnotesapi app endpoints
-        assert "200" in node.succeed("curl -s -o /dev/null -w '%{http_code}' http://admin:adminpass@localhost/index.php/apps/qownnotesapi/api/v1/note/versions?format=json&file_name=/Notes/test.md"), "Version API request failed!"
-        assert "200" in node.succeed("curl -s -o /dev/null -w '%{http_code}' http://admin:adminpass@localhost/index.php/apps/qownnotesapi/api/v1/note/trashed?format=json&dir=/Notes"), "Trash API request failed!"
-        assert "200" in node.succeed("curl -s -o /dev/null -w '%{http_code}' http://admin:adminpass@localhost/index.php/apps/qownnotesapi/api/v1/note/app_info?notes_path=/Notes"), "App Info API request failed!"
+
+        missing_path_info = api_get(node, "app_info", {"notes_path": "/Missing"})
+        assert missing_path_info["user"] == "admin"
+        assert missing_path_info["versions_app"] is True
+        assert missing_path_info["trash_app"] is True
+        assert missing_path_info["versioning"] is True
+        assert missing_path_info["app_version"] == "26.8.0"
+        assert missing_path_info["server_version"].startswith(label + ".")
+        assert missing_path_info["notes_path_exists"] is False
+
+        dav_request(node, "MKCOL", "Notes")
+        dav_request(node, "MKCOL", "Other")
+        notes_path_info = api_get(node, "app_info", {"notes_path": "/Notes"})
+        assert notes_path_info["notes_path_exists"] is True
+
+        original_note = "First version of the note\n"
+        current_note = "Current version of the note\n"
+        dav_request(node, "PUT", "Notes/versioned.md", original_note)
+        time.sleep(1)
+        dav_request(node, "PUT", "Notes/versioned.md", current_note)
+
+        versions = api_get(node, "versions", {"file_name": "/Notes/versioned.md"})
+        assert versions["file_name"] == "/Notes/versioned.md"
+        assert versions["error_messages"] == []
+        assert len(versions["versions"]) >= 1
+        assert any(version["data"] == original_note for version in versions["versions"])
+        assert all(version["timestamp"] > 0 for version in versions["versions"])
+        assert all(version["humanReadableTimestamp"] for version in versions["versions"])
+        assert all(version["diffHtml"] for version in versions["versions"])
+
+        dav_request(node, "PUT", "Notes/trashed.md", "Trashed Markdown note\n")
+        dav_request(node, "PUT", "Notes/custom.qnote", "Custom extension note\n")
+        dav_request(node, "PUT", "Notes/ignored.json", '{"ignored": true}\n')
+        dav_request(node, "PUT", "Other/outside.md", "Note outside requested directory\n")
+        dav_request(node, "DELETE", "Notes/trashed.md")
+        dav_request(node, "DELETE", "Notes/custom.qnote")
+        dav_request(node, "DELETE", "Notes/ignored.json")
+        dav_request(node, "DELETE", "Other/outside.md")
+
+        trash = api_get(node, "trashed", {"dir": "/Notes/", "extensions[]": ["qnote"]})
+        assert trash["directory"] == "Notes"
+        trashed_notes = {note["fileName"]: note for note in trash["notes"]}
+        assert set(trashed_notes) == {"trashed.md", "custom.qnote"}
+        assert trashed_notes["trashed.md"]["noteName"] == "trashed"
+        assert trashed_notes["trashed.md"]["data"] == "Trashed Markdown note\n"
+        assert trashed_notes["custom.qnote"]["data"] == "Custom extension note\n"
+        assert all(note["timestamp"] > 0 for note in trash["notes"])
+        assert all(note["dateString"] for note in trash["notes"])
+
+        deleted_note = trashed_notes["trashed.md"]
+        restore = api_get(node, "restore_trashed", {
+            "file_name": "/Notes/trashed.md",
+            "timestamp": deleted_note["timestamp"],
+        })
+        assert restore["result"] is True
+        assert restore["filename"] == "trashed.md"
+        assert dav_request(node, "GET", "Notes/trashed.md") == "Trashed Markdown note\n"
+
+        trash_after_restore = api_get(node, "trashed", {"dir": "/Notes/", "extensions[]": ["qnote"]})
+        remaining_names = {note["fileName"] for note in trash_after_restore["notes"]}
+        assert "trashed.md" not in remaining_names
+        assert "custom.qnote" in remaining_names
 
     ${
       if has32 then

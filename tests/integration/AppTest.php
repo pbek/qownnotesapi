@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @copyright Patrizio Bekerle 2015-2020
  */
 
-use OCA\QOwnNotesAPI\AppInfo\Application;
+use OCP\App\IAppManager;
 use Test\TestCase;
 
 /**
@@ -20,16 +20,8 @@ use Test\TestCase;
  * against the database.
  */
 class AppTest extends TestCase {
-	private $container;
-
-	public function setUp() {
-		parent::setUp();
-		$app = new Application();
-		$this->container = $app->getContainer();
-	}
-
-	public function testAppInstalled() {
-		$appManager = $this->container->query('OCP\App\IAppManager');
+	public function testAppInstalled(): void {
+		$appManager = \OC::$server->get(IAppManager::class);
 		$this->assertTrue($appManager->isInstalled('qownnotesapi'));
 	}
 }

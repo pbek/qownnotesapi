@@ -13,103 +13,152 @@ declare(strict_types=1);
 
 namespace OCA\QOwnNotesAPI\Controller;
 
+use OCP\App\IAppManager;
+use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IRequest;
+use OCP\IUserManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class NoteApiControllerTest extends TestCase {
-	/** @var NoteApiController */
-	private $controller;
+	private NoteApiController $controller;
+	private IRequest&MockObject $request;
+	private IUserManager&MockObject $userManager;
+	private IAppManager&MockObject $appManager;
+	private IConfig&MockObject $config;
+	private IAppConfig&MockObject $appConfig;
 
-	/** @var IRequest */
-	private $request;
+	protected function setUp(): void {
+		parent::setUp();
 
-	public function setUp() {
-		$this->request = $this->getMockBuilder('\OCP\IRequest')
-			->disableOriginalConstructor()
-			->getMock();
-
-		$user = 'admin';
-		$this->loginAsUser($user);
-
-		$this->controller = new NoteApiController('qownnotesapi', $user, $this->request);
+		$this->request = $this->createMock(IRequest::class);
+		$this->userManager = $this->createMock(IUserManager::class);
+		$this->appManager = $this->createMock(IAppManager::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->controller = $this->createController('admin');
 	}
 
-	public function testGetAllVersions() {
-		$fileName = '/Notes/some-not-existing-test-file.txt';
-		$this->request->expects($this->any())
+	public function testGetAppInfo(): void {
+		$this->request->expects($this->once())
 			->method('getParam')
-			->with('file_name')
-			->willReturn($fileName);
-
-		$result = $this->controller->getAllVersions();
-
-		$this->assertArrayHasKey('file_name', $result);
-		$this->assertArrayHasKey('versions', $result);
-		$this->assertEquals($fileName, $result['file_name']);
-	}
-
-	public function testGetAppInfo() {
-		$path = '/Notes';
-		$this->request->expects($this->any())
-			->method('getParam')
-			->with('notes_path')
-			->willReturn($path);
+			->with('notes_path', '')
+			->willReturn('');
+		$this->appManager->expects($this->exactly(2))
+			->method('isEnabledForUser')
+			->willReturnMap([
+				['files_versions', null, true],
+				['files_trashbin', null, true],
+			]);
+		$this->appConfig->expects($this->once())
+			->method('getValueString')
+			->with('qownnotesapi', 'installed_version', '')
+			->willReturn('26.8.0');
+		$this->config->expects($this->once())
+			->method('getSystemValue')
+			->with('version')
+			->willReturn('34.0.3');
 
 		$result = $this->controller->getAppInfo();
 
-		$this->assertArrayHasKey('versions_app', $result);
-		$this->assertArrayHasKey('trash_app', $result);
-		$this->assertArrayHasKey('versioning', $result);
-		$this->assertArrayHasKey('app_version', $result);
-		$this->assertArrayHasKey('server_version', $result);
-		$this->assertArrayHasKey('notes_path_exists', $result);
-		$this->assertTrue($result['versions_app']);
-		$this->assertTrue($result['trash_app']);
-		$this->assertEquals($result['app_version'], \OC::$server->getConfig()->getAppValue('qownnotesapi', 'installed_version'));
+		$this->assertSame([
+			'user' => 'admin',
+			'versions_app' => true,
+			'trash_app' => true,
+			'versioning' => true,
+			'app_version' => '26.8.0',
+			'server_version' => '34.0.3',
+			'notes_path_exists' => false,
+		], $result);
 	}
 
-	public function testGetTrashedNotes() {
-		$this->request->expects($this->at(0))
+	public function testConstructorFallsBackToBasicAuthUser(): void {
+		$previousAuthUser = $_SERVER['PHP_AUTH_USER'] ?? null;
+		$_SERVER['PHP_AUTH_USER'] = 'basic-auth-user';
+
+		try {
+			$this->request->method('getParam')->willReturn('');
+			$this->appManager->method('isEnabledForUser')->willReturn(false);
+			$this->appConfig->method('getValueString')->willReturn('26.8.0');
+			$this->config->method('getSystemValue')->willReturn('34.0.3');
+
+			$result = $this->createController(null)->getAppInfo();
+
+			$this->assertSame('basic-auth-user', $result['user']);
+		} finally {
+			if ($previousAuthUser === null) {
+				unset($_SERVER['PHP_AUTH_USER']);
+			} else {
+				$_SERVER['PHP_AUTH_USER'] = $previousAuthUser;
+			}
+		}
+	}
+
+	public function testGetAppInfoReportsDisabledApps(): void {
+		$this->request->expects($this->once())
 			->method('getParam')
-			->with('dir', '')
-			->willReturn('/Notes');
-		$this->request->expects($this->at(1))
-			->method('getParam')
-			->with('extensions', [])
-			->willReturn([]);
-		$this->request->expects($this->at(2))
-			->method('getParam')
-			->with('sort', 'mtime')
-			->willReturn('mtime');
+			->with('notes_path', '')
+			->willReturn('');
+		$this->appManager->method('isEnabledForUser')->willReturn(false);
+		$this->appConfig->method('getValueString')->willReturn('26.8.0');
+		$this->config->method('getSystemValue')->willReturn('34.0.3');
+
+		$result = $this->controller->getAppInfo();
+
+		$this->assertFalse($result['versions_app']);
+		$this->assertFalse($result['trash_app']);
+		$this->assertTrue($result['versioning']);
+	}
+
+	public function testGetTrashedNotesNormalizesDirectoryAndInvalidExtensions(): void {
+		$this->request->method('getParam')->willReturnCallback(
+			static fn (string $key, $default = null) => match ($key) {
+				'dir' => '/Notes/',
+				'extensions' => 'qnote',
+				'sort' => 'mtime',
+				'sortdirection' => '',
+				default => $default,
+			}
+		);
 
 		$result = $this->controller->getTrashedNotes();
 
-		$this->assertArrayHasKey('directory', $result);
-		$this->assertArrayHasKey('notes', $result);
-		$this->assertEquals($result['directory'], 'Notes');
-		$this->assertEquals($result['notes'], []);
+		$this->assertSame('Notes', $result['directory']);
+		$this->assertSame([], $result['notes']);
 	}
 
-	public function testRestoreTrashedNote() {
-		$file = 'some-not-existing-test-file.txt';
-		$timestamp = time();
+	public function testGetTrashedNotesUsesRequestDefaults(): void {
+		$this->request->method('getParam')->willReturnCallback(
+			static fn (string $key, $default = null) => $default
+		);
 
-		$this->request->expects($this->at(0))
-			->method('getParam')
-			->with('file_name')
-			->willReturn("/Notes/$file");
-		$this->request->expects($this->at(1))
-			->method('getParam')
-			->with('timestamp')
-			->willReturn($timestamp);
+		$result = $this->controller->getTrashedNotes();
 
-		$result = $this->controller->restoreTrashedNote();
+		$this->assertSame('', $result['directory']);
+		$this->assertSame([], $result['notes']);
+	}
 
-		$this->assertArrayHasKey('result', $result);
-		$this->assertArrayHasKey('path', $result);
-		$this->assertArrayHasKey('filename', $result);
-		$this->assertFalse($result['result']);
-		$this->assertEquals($result['path'], "//$file.d$timestamp");
-		$this->assertEquals($result['filename'], $file);
+	public function testGetTrashedNotesPreservesDirectoryWithoutSlashes(): void {
+		$this->request->method('getParam')->willReturnCallback(
+			static fn (string $key, $default = null) => $key === 'dir' ? 'Notes' : $default
+		);
+
+		$result = $this->controller->getTrashedNotes();
+
+		$this->assertSame('Notes', $result['directory']);
+		$this->assertSame([], $result['notes']);
+	}
+
+	private function createController(?string $userId): NoteApiController {
+		return new NoteApiController(
+			'qownnotesapi',
+			$userId,
+			$this->request,
+			$this->userManager,
+			$this->appManager,
+			$this->config,
+			$this->appConfig,
+		);
 	}
 }

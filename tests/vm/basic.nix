@@ -3,6 +3,9 @@
 
 let
   inherit (pkgs26_05) lib;
+  appVersion = builtins.head (
+    builtins.match ".*<version>([^<]+)</version>.*" (builtins.readFile ../../appinfo/info.xml)
+  );
   # Safe lookup on pkgs26_05 catching eval errors
   tryAttr2605 =
     name:
@@ -138,7 +141,7 @@ pkgs26_05.testers.nixosTest {
         assert missing_path_info["versions_app"] is True
         assert missing_path_info["trash_app"] is True
         assert missing_path_info["versioning"] is True
-        assert missing_path_info["app_version"] == "26.8.0"
+        assert missing_path_info["app_version"] == ${builtins.toJSON appVersion}, missing_path_info
         assert missing_path_info["server_version"].startswith(label + ".")
         assert missing_path_info["notes_path_exists"] is False
 

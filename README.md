@@ -1,5 +1,12 @@
 # [QOwnNotesAPI](http://www.qownnotes.org "QOwnNotes Offical Site")
 
+> [!WARNING]
+> **QOwnNotesAPI is deprecated.** Nextcloud users are encouraged to switch to **[QOwnNotes for Nextcloud](https://github.com/qownnotes/qownnotes-nextcloud)**, its recommended successor.
+>
+> The new app provides the APIs for QOwnNotes Desktop and Android, plus a web interface for editing notes with subfolders and tags. Read the **[migration guide](https://github.com/qownnotes/qownnotes-nextcloud/blob/main/docs/migration.md)** for installation and client compatibility requirements before removing QOwnNotesAPI.
+>
+> QOwnNotes for Nextcloud does not support ownCloud; ownCloud users cannot migrate to it.
+
 [Changelog](https://github.com/pbek/qownnotesapi/blob/develop/CHANGELOG.md) |
 [Issues](https://github.com/pbek/qownnotesapi/issues) |
 [Download](https://github.com/pbek/qownnotesapi/releases) |

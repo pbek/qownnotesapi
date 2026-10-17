@@ -5,10 +5,16 @@
     <id>qownnotesapi</id>
     <name>QOwnNotesAPI</name>
     <summary>API for QOwnNotes, the open source notepad for Linux, macOS, Windows and Android</summary>
-    <description><![CDATA[QOwnNotesAPI is the Nextcloud/ownCloud API for QOwnNotes, the open source notepad for Linux, macOS, Windows and Android, that works together with the notes application of Nextcloud/ownCloud.
+    <description><![CDATA[**QOwnNotesAPI is deprecated.** Nextcloud users are encouraged to switch to **[QOwnNotes for Nextcloud](https://github.com/qownnotes/qownnotes-nextcloud)**, its recommended successor.
+
+The new app provides the APIs for QOwnNotes Desktop and Android, plus a web interface for editing notes with subfolders and tags. Read the **[migration guide](https://github.com/qownnotes/qownnotes-nextcloud/blob/main/docs/migration.md)** for installation and client compatibility requirements before removing QOwnNotesAPI.
+
+QOwnNotes for Nextcloud does not support ownCloud; ownCloud users cannot migrate to it.
+
+QOwnNotesAPI is the Nextcloud/ownCloud API for QOwnNotes, the open source notepad for Linux, macOS, Windows and Android, that works together with the notes application of Nextcloud/ownCloud.
 
 The only purpose of this App is to provide API access to your Nextcloud/ownCloud server for the [QOwnNotes desktop app](https://www.qownnotes.org) and the [QOwnNotes Android app](https://github.com/qownnotes/qownnotes-android). You cannot use this App for anything else if you don't use one of these QOwnNotes apps!]]></description>
-    <version>26.8.0</version>
+    <version>26.8.1</version>
     <licence>agpl</licence>
     <author mail="patrizio@bekerle.com" homepage="http://www.bekerle.com/">Patrizio Bekerle</author>
     <namespace>QOwnNotesAPI</namespace>

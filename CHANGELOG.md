@@ -1,5 +1,10 @@
 # QOwnNotesAPI Change Log
 
+## 26.8.1
+
+- Marked QOwnNotesAPI as deprecated in the README and app description and recommended [QOwnNotes for Nextcloud](https://github.com/qownnotes/qownnotes-nextcloud) as its successor
+- Linked the migration guide with installation and client compatibility requirements and clarified that ownCloud users cannot migrate to the new app
+
 ## 26.8.0
 
 - Enabled, fixed and tested app for Nextcloud 35 (for [#59](https://github.com/pbek/qownnotesapi/issues/59))

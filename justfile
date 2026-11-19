@@ -43,6 +43,11 @@ git-apply-patch:
 github-run-test:
     nix-shell -p act --run "act -W .github/workflows/test.yml"
 
+# Show release tags, .tar.gz asset names, and download counts as TSV
+@release-downloads:
+    gh api --paginate 'repos/pbek/qownnotesapi/releases?per_page=100' \
+        --jq '.[] | .tag_name as $tag | .assets[] | select(.name | endswith(".tar.gz")) | [$tag, .name, .download_count] | @tsv'
+
 # Open the project in the browser
 [group('dev')]
 open-browser:

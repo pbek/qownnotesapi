@@ -6,6 +6,7 @@ docker/owncloud/certificates/*
 *.gz
 *.db*
 *.cache
+__pycache__/
 vendor
 .shared
 

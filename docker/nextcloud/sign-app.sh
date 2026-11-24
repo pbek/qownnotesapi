@@ -21,7 +21,7 @@ rm -rf ${APP_DEST} &&
     --exclude .envrc --exclude .direnv --exclude term.kdl --exclude .phpunit.result.cache \
     --exclude justfile --exclude treefmt.toml --exclude .devenv --exclude flake.* \
     --exclude .devenv.* --exclude devenv.* --exclude .pre-commit-config.* --exclude .shared --exclude .codeclimate.yml --exclude .editorconfig --exclude .php_cs.dist --exclude .travis.yml --exclude package-lock.json \
-    --exclude AGENTS.md \
+    --exclude AGENTS.md --exclude scripts --exclude build --exclude release-files.txt \
     ${APP_SOURCE}/ ${APP_DEST} &&
   echo "✅ Files copied to deployment directory." &&
   if [ "$(find ${APP_DEST} -type l | wc -l)" -gt 0 ]; then

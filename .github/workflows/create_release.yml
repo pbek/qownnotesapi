@@ -1,83 +1,105 @@
-name: "🗃️ Create empty release"
+name: Sign and publish Nextcloud release
 
 on:
   push:
     branches:
       - release
-    tags-ignore:
-      - "*"
-  workflow_dispatch:
 
-env:
-  APP_NAME: qownnotesapi
+permissions:
+  contents: read
+
+concurrency:
+  group: signed-release
+  cancel-in-progress: false
 
 jobs:
-  create_release:
-    name: "🗃️️ Prepare release"
-    permissions:
-      contents: write # for actions/create-release to create a release
+  validate:
+    name: Validate release metadata and scripts
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      release_id: ${{ steps.create_release.outputs.id }}
+      version: ${{ steps.metadata.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Install libxml2-utils
-        run: sudo apt-get install libxml2-utils
-      - name: Set Env
-        run: |
-          export VERSION=$(xmllint --xpath "string(/info/version)" appinfo/info.xml)
-          export TAG=v${VERSION}
-          export RELEASE_TEXT=$(grep -Pzo "## ${VERSION}\n(\n|.)+?\n##" CHANGELOG.md | sed '$ d')
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "TAG=${TAG}" >> $GITHUB_ENV
-          # add multiline release text
-          echo "RELEASE_TEXT<<EOF" >> $GITHUB_ENV
-          echo "${RELEASE_TEXT}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-      - name: Printenv
-        run: |
-          echo "VERSION=${VERSION}"
-          echo "TAG=${TAG}"
-          echo "RELEASE_TEXT=${RELEASE_TEXT}"
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
-          tag_name: ${{ env.TAG }}
-          release_name: Release v${{ env.VERSION }}
-          body: ${{ env.RELEASE_TEXT }}
-          draft: true
-          prerelease: false
-#  build_and_publish:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#        with:
-#          path: ${{ env.APP_NAME }}
-#      - name: Install NPM packages
-#        run: cd ${{ env.APP_NAME }} && make npm-init
-#      - name: Build JS
-#        run: cd ${{ env.APP_NAME }} && make build-js-production
-#      - name: Create release tarball
-#        run: cd ${{ env.APP_NAME }} && make appstore
-#      - name: Upload app tarball to release
-#        uses: svenstaro/upload-release-action@v2
-#        id: attach_to_release
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: ${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz
-#          asset_name: ${{ env.APP_NAME }}.tar.gz
-#          tag: ${{ github.ref }}
-#          overwrite: true
-#      - name: Upload app to Nextcloud appstore
-#        uses: R0Wi/nextcloud-appstore-push-action@v1.0.3
-#        with:
-#          app_name: ${{ env.APP_NAME }}
-#          appstore_token: ${{ secrets.APPSTORE_TOKEN }}
-#          download_url: ${{ steps.attach_to_release.outputs.browser_download_url }}
-#          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
-#          nightly: false
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check version, changelog, and release files
+        id: metadata
+        run: |
+          python3 -m unittest discover -s tests/release
+          version=$(python3 scripts/release_metadata.py)
+          if git show-ref --verify --quiet "refs/tags/v$version"; then
+            echo "::error::Tag v$version already exists. Bump the app version and changelog before releasing."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  test:
+    name: Run Nextcloud VM tests
+    needs: validate
+    uses: ./.github/workflows/vm-test.yml
+
+  sign:
+    name: Sign and verify release archive
+    needs: [validate, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: release-signing
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - run: sh scripts/ci-sign-app.sh
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_PUBLIC_CRT: ${{ secrets.APP_PUBLIC_CRT }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: signed-release-${{ github.sha }}
+          path: |
+            build/qownnotesapi-nc.tar.gz
+            build/qownnotesapi-nc.tar.gz.sig
+            build/qownnotesapi-nc.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+  github:
+    name: Publish GitHub release
+    needs: sign
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release-publishing
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: signed-release-${{ github.sha }}
+          path: build
+      - run: python3 scripts/publish-release.py github --commit "$GITHUB_SHA"
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+
+  appstore:
+    name: Publish Nextcloud App Store release
+    needs: [validate, github]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release-publishing
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: signed-release-${{ github.sha }}
+          path: build
+      - run: python3 scripts/publish-release.py appstore --version "$RELEASE_VERSION"
+        env:
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          APPSTORE_TOKEN: ${{ secrets.APPSTORE_TOKEN }}

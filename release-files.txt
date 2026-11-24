@@ -1,0 +1,10 @@
+3rdparty/finediff/finediff.php
+AUTHORS.md
+CHANGELOG.md
+COPYING
+README.md
+appinfo/info.xml
+appinfo/routes.php
+img/app.svg
+lib/Controller/NoteApiController.php
+lib/capabilities.php

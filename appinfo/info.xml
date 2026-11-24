@@ -31,7 +31,7 @@ The only purpose of this App is to provide API access to your Nextcloud/ownCloud
     <website>https://github.com/pbek/qownnotesapi</website>
     <bugs>https://github.com/pbek/qownnotesapi/issues</bugs>
     <repository type="git">https://github.com/pbek/qownnotesapi.git</repository>
-    <screenshot>https://raw.githubusercontent.com/pbek/qownnotesapi/develop/screenshot.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/pbek/qownnotesapi/main/screenshot.png</screenshot>
 
     <!-- dependencies -->
     <dependencies>
